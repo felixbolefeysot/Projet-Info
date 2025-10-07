@@ -5,7 +5,9 @@ interface
 uses Typesmenu;
 
 procedure choix(var choix : Integer);
-procedure menu(liste: TListeProfils; choix : Integer);
+{procedure menu(liste: TListeProfils; choix : Integer);
+procedure lancerJeu(choixj : Integer);}
+procedure Choixjeu(nbJ : Integer; var choixj : Integer);
 
 implementation
 
@@ -20,7 +22,7 @@ begin
 	until (choix<5) and (choix>0)
 end;
 
-procedure menu(liste: TListeProfils; choix : Integer);
+{procedure menu(liste: TListeProfils; choix : Integer);
 begin
 	case choix of
 	1: Records(liste);
@@ -28,7 +30,7 @@ begin
 	3: DeuxJoueurs();
 	4: Parametres(liste);
 	end;
-end;
+end;}
 
 procedure Choixjeu(nbJ : Integer; var choixj : Integer);
 begin
@@ -41,5 +43,18 @@ begin
 		end;
 	readln(choixj);
 end;
+
+{procedure lancerJeu(choixj : Integer);
+begin
+	case choixj of
+	1: if nbJ=1 then
+		jeu1()
+	else
+		Puissance4();
+	2: if nbJ=1 then
+		jeu2()
+	else
+		jeu2();
+	end;}
 
 end.

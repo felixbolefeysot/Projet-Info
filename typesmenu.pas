@@ -4,7 +4,7 @@ interface
     
     Type TProfil=record
         nom : string;
-        scores : array[1..1] of integer
+        scores : array[1..1] of integer;
     end;
 
     Type TListeProfils=record

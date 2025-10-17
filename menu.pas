@@ -4,10 +4,15 @@ interface
 
 uses Typesmenu;
 
+var choixj,nbJ,nbJeu : Integer;
+
 procedure choix(var choix : Integer);
 {procedure menu(liste: TListeProfils; choix : Integer);
 procedure lancerJeu(choixj : Integer);}
 procedure Choixjeu(nbJ : Integer; var choixj : Integer);
+procedure UnJoueur(choixj: Integer;var ListeProfils : TListeProfils);
+procedure DeuxJoueurs(choixj:Integer;var ListeProfils : TListeProfils);
+
 
 implementation
 
@@ -25,10 +30,10 @@ end;
 {procedure menu(liste: TListeProfils; choix : Integer);
 begin
 	case choix of
-	1: Records(liste);
-	2: UnJoueur();
-	3: DeuxJoueurs();
-	4: Parametres(liste);
+	1: Records(ListeProfils);
+	2: UnJoueur(choixj,ListeProfils);
+	3: DeuxJoueurs(choixj,ListeProfils);
+	4: Parametres(ListeProfils);
 	end;
 end;}
 
@@ -44,7 +49,7 @@ begin
 	readln(choixj);
 end;
 
-{procedure lancerJeu(choixj : Integer);
+{procedure lancerJeu(choixj : Integer; var ListeProfils : TListeProfils);
 begin
 	case choixj of
 	1: if nbJ=1 then
@@ -56,5 +61,24 @@ begin
 	else
 		jeu2();
 	end;}
+	
+procedure UnJoueur(choixj: Integer;var ListeProfils : TListeProfils);
+begin
+	Choixjeu(nbJ,choixj);
+	{lancerJeu(choixj,ListeProfils)}
+end;
+
+procedure DeuxJoueurs(choixj:Integer;var ListeProfils : TListeProfils);
+begin
+	Choixjeu(nbJ,choixj);
+	{LancerJeu(choixj,ListeProfils)}
+end;
+
+{procedure Records(nbJeu: Integer;ListeProfils : TListeProfils);
+var i : Integer;
+begin
+	for i:=1 to ListeProfils[i].nbJeu do
+		writeln(nomJeu,':',bestJ,',',bestScore,'pts')
+end;}
 
 end.

@@ -2,11 +2,12 @@ unit roulette;
 
 interface
 
-implementation
 procedure choix(var i: integer);
-procedure mise(choix: integer; var mise, douzaine, ligne, colonne: integer; var c, ip: char);
+procedure miser(choix: integer; var mise, douzaine, ligne, colonne: integer; var c, ip: char);
 procedure tirage(var numero: integer; var couleur, parite: string; var douzaine, ligne, colonne: integer);
-procedure calculerGain(choix, mise, douzaineMise, ligneMise, colonneMise, numeroTirage, douzaineTirage, ligneTirage, colonneTirage: integer; c, ip: char; couleurT
+procedure calculerGain(choix, mise, douzaineMise, ligneMise, colonneMise, numeroTirage, douzaineTirage, ligneTirage, colonneTirage: integer; c, ip: char; couleurTirage, pariteTirage: string; var gain: integer);
+
+implementation
 
 procedure choix(var i: integer);
 	begin
@@ -14,7 +15,7 @@ procedure choix(var i: integer);
 		writeln('Tapez 1 pour miser sur le rouge ou le noir');
 		writeln('tapez 2 pour miser sur une douzaine');
 		writeln('tapez 3 pour miser sur pair ou impair');
-		writeln('tapez 4 pour miser le zéro');
+		writeln('tapez 4 pour miser le zero');
 		writeln('tapez 5 pour miser sur une ligne');
 		writeln('tapez 6 pour miser sur une colonne');
 		begin
@@ -24,16 +25,16 @@ procedure choix(var i: integer);
 		end; 
 end;
 
-procedure mise(choix: integer; var mise, douzaine, ligne, colonne: integer; var c, ip: char);
+procedure miser(choix: integer; var mise, douzaine, ligne, colonne: integer; var c, ip: char);
 begin
   case choix of
     1: begin
          writeln('Noir ou rouge ?');
-         writeln('Tapez n pour miser sur le noir');
-         writeln('Tapez r pour miser sur le rouge');
+         writeln('Tapez N pour miser sur le noir');
+         writeln('Tapez R pour miser sur le rouge');
          repeat
            readln(c);
-         until (c = 'n') or (c = 'r');
+         until (c = 'N') or (c = 'R') or (c = 'n') or (c = 'r');
          writeln('Combien voulez-vous miser ?');
          readln(mise);
        end;
@@ -49,11 +50,11 @@ begin
 
     3: begin
          writeln('Pair ou impair ?');
-         writeln('Tapez p pour pair');
-         writeln('Tapez i pour impair');
+         writeln('Tapez P pour pair');
+         writeln('Tapez I pour impair');
          repeat
            readln(ip);
-         until (ip = 'p') or (ip = 'i');
+         until (ip = 'P') or (ip = 'I') or (ip = 'p') or (ip = 'i');
          writeln('Combien voulez-vous miser ?');
          readln(mise);
        end;
@@ -139,8 +140,8 @@ begin
 
   case choix of
     1: // mise sur couleur (n ou r)
-      if ((c = 'n') and (couleurTirage = 'noir')) or
-         ((c = 'r') and (couleurTirage = 'rouge')) then
+      if (((c = 'N') or (c = 'n')) and (couleurTirage = 'noir')) or
+         (((c = 'r') or ( c = 'R')) and (couleurTirage = 'rouge')) then
         gain := mise * 2; // gain 2 fois la mise
 
     2: // mise sur douzaine (1, 2, 3)
@@ -148,8 +149,8 @@ begin
         gain := mise * 3; // gain triple
 
     3: // mise sur pair ou impair (p ou i)
-      if ((ip = 'p') and (pariteTirage = 'pair')) or
-         ((ip = 'i') and (pariteTirage = 'impair')) then
+      if (((ip = 'p') or ( ip = 'P')) and (pariteTirage = 'pair')) or
+         (((ip = 'i') or (ip = 'I')) and (pariteTirage = 'impair')) then
         gain := mise * 2;
 
     4: // mise sur zéro
@@ -165,3 +166,4 @@ begin
         gain := mise * 3;
   end;
 end;
+end.

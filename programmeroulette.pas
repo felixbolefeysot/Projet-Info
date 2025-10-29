@@ -6,7 +6,7 @@ procedure jouerRoulette;  { Lance tout le jeu }
 
 implementation
 
-uses sysutils, crt;
+uses sysutils, crt, typesmenu;
 
 
 procedure choix(var choix: integer);
@@ -15,7 +15,7 @@ begin
    writeln('Tapez 1 pour miser sur le rouge ou le noir');
    writeln('Tapez 2 pour miser sur une douzaine');
    writeln('Tapez 3 pour miser sur pair ou impair');
-   writeln('Tapez 4 pour miser le zéro');
+   writeln('Tapez 4 pour miser le zero');
    writeln('Tapez 5 pour miser sur une ligne');
    writeln('Tapez 6 pour miser sur une colonne');
    
@@ -56,7 +56,7 @@ begin
             readln(mise);
          end;
       4: begin
-            writeln('Combien voulez-vous miser sur le zéro ?');
+            writeln('Combien voulez-vous miser sur le zero ?');
             readln(mise);
          end;
       5: begin
@@ -142,7 +142,7 @@ end;
 procedure afficherCapital(capital: integer);
 begin
   writeln('----------------------------------------');
-  writeln('Capital actuel : ', capital, ' unités');
+  writeln('Capital actuel : ', capital, ' unites');
   writeln('----------------------------------------');
 end;
 
@@ -155,13 +155,13 @@ begin
   randomize;
   writeln('----------------------------------------');
   writeln(' Bienvenue à la Roulette !');
-  writeln('Capital de départ : ', capital, ' unités.');
+  writeln('Capital de depart : ', capital, ' unites.');
   writeln('----------------------------------------');
 
   repeat
     if capital <= 0 then
     begin
-      writeln(' Vous n''avez plus d''argent... Le jeu est terminé.');
+      writeln(' Vous n''avez plus d''argent... Le jeu est termine.');
       break;
     end;
 
@@ -178,17 +178,17 @@ begin
     num := tirage;
     writeln;
     writeln('----------------------------------------');
-    writeln(' Numéro tiré : ', num, ' (', couleur(num), ')');
+    writeln(' Numero tire : ', num, ' (', couleur(num), ')');
     gain := verifgain(ch, num, m, d, l, co, c, ip);
 
     if gain > 0 then
     begin
-      writeln(' Gagné ! Vous remportez ', gain, ' unités.');
+      writeln(' Gagne ! Vous remportez ', gain, ' unites.');
       capital := capital + (gain - m); 
     end
     else
     begin
-      writeln(' Perdu ! Vous perdez votre mise de ', m, ' unités.');
+      writeln(' Perdu ! Vous perdez votre mise de ', m, ' unites.');
       capital := capital - m;
     end;
 
@@ -204,9 +204,12 @@ begin
 
   until (rejouer <> 'o') and (rejouer <> 'O');
 
+  if capital > liste.profils[j].scores[1] then
+    liste.profils[j].scores[1] := capital;
+
   writeln;
   writeln('----------------------------------------');
-  writeln(' Fin du jeu ! Capital final : ', capital, ' unités.');
+  writeln(' Fin du jeu ! Capital final : ', capital, ' unites.');
   writeln('Merci d''avoir joué !');
   writeln('----------------------------------------');
   readln;

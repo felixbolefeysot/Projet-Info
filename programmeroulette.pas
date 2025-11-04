@@ -2,7 +2,7 @@ unit programmeroulette;
 
 interface
 
-procedure jouerRoulette;  { Lance tout le jeu }
+procedure jouerRoulette(j: Integer;var liste: TListeProfils);{ Lance tout le jeu }
 
 implementation
 
@@ -146,7 +146,7 @@ begin
   writeln('----------------------------------------');
 end;
 
-procedure jouerRoulette;
+procedure jouerRoulette(j: Integer;var liste: TListeProfils);
 var
   ch, m, d, l, co, num, gain, capital: integer;
   c, ip, rejouer: char;

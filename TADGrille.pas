@@ -2,7 +2,7 @@ unit TADGrille;
 
 interface
 
-uses typesmenu;
+uses typesmenu, crt;
 
 Type TGrille = array [1..7,1..6] of integer;
 
@@ -14,6 +14,11 @@ function verifligne(g : TGrille; joueur,l : Integer) : Boolean;
 function verifcolonne(g : TGrille; joueur,c : Integer) : Boolean;
 function verifdiagonale(g : TGrille; joueur,c,l : Integer) : Boolean;
 procedure ModifScoreP4(joueur : integer; var p : TListeProfils);
+procedure afficherGrille(g : TGrille);
+function estFinie(g : TGrille; c,l : Integer) : Boolean;
+
+var c,l : Integer;
+    g : TGrille;
 
 implementation
 
@@ -135,5 +140,37 @@ begin
     p.profils[joueur].scores[1]:=p.profils[joueur].scores[1]+1;
 end;
 
+procedure afficherGrille(g : TGrille);
+var i,j : integer;
+begin
+    clrscr;
+    for j:=1 to 6 do
+        begin
+            for i:=1 to 7 do
+                begin
+                    if g[i,j]=0 then
+                        write('| . ')
+                    else if g[i,j]=1 then
+                        write('| 1 ')
+                    else
+                        write('| 2 ');
+                end;
+            writeln('|');
+        end;
+    writeln(' -----------------------------');
+    writeln('  1   2   3   4   5   6   7  ');
+end;
+
+function estFinie(g : TGrille; c,l : Integer) : Boolean;
+begin
+    if estGagne(g,1,c,l) then
+        estFinie := True
+    else if estGagne(g,2,c,l) then
+        estFinie := True
+    else if (g[1,1]<>0) and (g[2,1]<>0) and (g[3,1]<>0) and (g[4,1]<>0) and (g[5,1]<>0) and (g[6,1]<>0) and (g[7,1]<>0) then
+        estFinie := True
+    else
+        estFinie := False;
+end;
 
 end.

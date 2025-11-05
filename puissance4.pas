@@ -2,20 +2,37 @@ unit puissance4;
 
 interface
 
-uses TADGrille;
+uses TADGrille, Typesmenu, crt;
 
-puissance4(var g : TGrille);
+procedure puissance4;
+procedure scorepuissance4(var liste: TListeProfils; j1, j2: Integer);
+
 
 implementation
 
-puissance4(var g : TGrille);
-var j,c,l : Integer
+procedure puissance4;
+var 
+    j,c,l : Integer;
+	g : TGrille;
 begin
-	CreerGrilleVide(g);
-	j:=1
-	repeat
-		PoserJeton(j,g,c,l)
-	until estGagne
+    CreerGrilleVide(g);
+    j := 1;
+    afficherGrille(g);
+	c:=0;
+	l:=0;
+    repeat
+        PoserJeton(j,g,c,l);
+        afficherGrille(g);
+		j := (j+1)mod 2+2;
+    until estFinie(g,c,l);
+end;
+
+procedure scorepuissance4(var liste: TListeProfils; j1, j2: Integer);
+begin
+    if estGagne(g,j1,c,l) then
+        liste.profils[j1].scores[2]:=liste.profils[j1].scores[2]+1;
+    if estGagne(g,j2,c,l) then
+        liste.profils[j2].scores[2]:=liste.profils[j2].scores[2]+1;
 end;
 
 end.

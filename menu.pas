@@ -4,7 +4,7 @@ unit menu;
 
 interface
 
-uses Typesmenu, crt, SysUtils;
+uses Typesmenu, crt, SysUtils, puissance4, casino;
 
 var choixj : Integer;
 	listej : TListeJeux;
@@ -12,10 +12,10 @@ var choixj : Integer;
 
 procedure choix(var choix : Integer);
 procedure menu(ListeProfils: TListeProfils; choix : Integer);
-{procedure lancerJeu(choixj : Integer);}
+procedure lancerJeu(j1,j2,choixj : Integer; var ListeProfils : TListeProfils);
 procedure Choixjeu(nbJ : Integer; var choixj : Integer);
-procedure UnJoueur(choixj: Integer;var ListeProfils : TListeProfils);
-procedure DeuxJoueurs(choixj:Integer;var ListeProfils : TListeProfils);
+procedure UnJoueur(var ListeProfils : TListeProfils);
+procedure DeuxJoueurs(var ListeProfils : TListeProfils);
 procedure Parametres(var ListeProfils : TListeProfils);
 procedure Records(ListeProfils : TListeProfils);
 procedure AjouterProfil(var ListeProfils : TListeProfils);
@@ -24,6 +24,7 @@ procedure ModifierProfil(var ListeProfils : TListeProfils);
 procedure chargerProfils(var ListeProfils : TListeProfils);
 procedure sauvegarderProfils( const ListeProfils : TListeProfils);
 procedure initNomJeux(var listej : TListeJeux);
+procedure choixJoueur(p : Integer; var j: Integer);
 
 implementation
 
@@ -43,52 +44,62 @@ procedure menu(ListeProfils: TListeProfils; choix : Integer);
 begin
 	case choix of
 	1: Records(ListeProfils);
-	2: UnJoueur(choixj,ListeProfils);
-	3: DeuxJoueurs(choixj,ListeProfils);
+	2: UnJoueur(ListeProfils);
+	3: DeuxJoueurs(ListeProfils);
 	4: Parametres(ListeProfils);
 	5: writeln('Au revoir !');
 	end;
 end;
 
 procedure Choixjeu(nbJ : Integer; var choixj : Integer);
+var i : Integer;
 begin
-	if nbJ = 1 then
-		writeln('1-casino')
-	else
-		begin
-			writeln('2-puissance 4');
-		end;
+	initNomJeux(listej);
+	for i:= 1 to length(listej.jeu) do
+		writeln(i,'-',listej.jeu[i]);
 	repeat
 		writeln('Quel jeu voulez-vous faire ?');
 		readln(choixj);
-		if (choixj<1) or (choixj>2) then
+		if (choixj<1) or (choixj>3) then
 			writeln('Choix invalide, veuillez reessayer.');
-	until (choixj >= 1) and (choixj <= 2);
+	until (choixj >= 1) and (choixj <= 3);
 end;
 
-{procedure lancerJeu(choixj : Integer; var ListeProfils : TListeProfils);
+procedure lancerJeu(j1,j2,choixj : Integer; var ListeProfils : TListeProfils);
 begin
-	case choixj of
-	1: if nbJ=1 then
-		jeu1()
-	else
-		Puissance4();
-	2: if nbJ=1 then
-		jeu2()
-	else
-		jeu2();
-	end;}
+		case choixj of
+					1: begin
+							jouerRoulette; 
+							scorecasino(ListeProfils, j1);
+						 end;
+					2: begin
+							puissance4.
+							scorepuissance4(ListeProfils, j1, j2);
+						 end;
+			{3: begin
+					 frogger();
+					 scorefrogger(ListeProfils, j1);
+				 end;}
+		end;
+end;
 	
-procedure UnJoueur(choixj: Integer;var ListeProfils : TListeProfils);
+procedure UnJoueur(var ListeProfils : TListeProfils);
+var
+	j1, choixj : Integer;
 begin
-	Choixjeu(1,choixj);
-	{lancerJeu(choixj,ListeProfils)}
+	Choixjeu(1, choixj);
+	ChoixJoueur(1, j1);
+	lancerJeu(j1, 0, choixj, ListeProfils);
 end;
 
-procedure DeuxJoueurs(choixj:Integer;var ListeProfils : TListeProfils);
+procedure DeuxJoueurs(var ListeProfils : TListeProfils);
+var
+	j1, j2, choixj : Integer;
 begin
-	Choixjeu(2,choixj);
-	{LancerJeu(choixj,ListeProfils)}
+	Choixjeu(2, choixj);
+	ChoixJoueur(1, j1);
+	ChoixJoueur(2, j2);
+	lancerJeu(j1, j2, choixj, ListeProfils);
 end;
 
 procedure Records(ListeProfils : TListeProfils);
@@ -97,7 +108,7 @@ var i,j, score : Integer;
 begin
 	initNomJeux(listej);
 	writeln('Affichage des records :');
-	for i:=1 to 2 do
+	for i:=1 to 3 do
 		begin
 			score := 0;
 			nomrecord := '';
@@ -136,7 +147,7 @@ var i : Integer;
 begin
 	writeln('choissisez un nom pour le nouveau profil :');
 	readln(liste.profils[length(liste.profils)+1].nom);
-	for i:=1 to 2 do
+	for i:=1 to 3 do
 		liste.profils[length(liste.profils)].scores[i]:=0;
 end;
 
@@ -205,7 +216,7 @@ begin
 	for i := 0 to n - 1 do
 	begin
 		readLn(f, ListeProfils.profils[i].nom);
-		for j := 1 to 2 do
+		for j := 1 to 3 do
 			readLn(f, ListeProfils.profils[i].scores[j]);
 	end;
 		closefile(f);
@@ -215,6 +226,18 @@ procedure initNomJeux(var listej : TListeJeux);
 begin
 	listej.jeu[1] := 'casino';
 	listej.jeu[2] := 'Puissance 4';
+	listej.jeu[3] := 'frogger';
+end;
+
+procedure choixJoueur(p : Integer; var j: Integer);
+var i : Integer;
+begin
+	if length(ListeProfils.profils) = 0 then
+		AjouterProfil(ListeProfils);
+	for i:=0 to length(ListeProfils.profils)-1 do
+		writeln(i+1,'-',ListeProfils.profils[i].nom);
+	writeln('choissez un profil pour le joueur ',p,':');
+	readln(j);
 end;
 
 end.

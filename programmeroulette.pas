@@ -2,7 +2,12 @@ unit programmeroulette;
 
 interface
 
-procedure jouerRoulette(j: Integer;var liste: TListeProfils);{ Lance tout le jeu }
+procedure choix(var choix: integer);
+procedure mise(choix : integer; var mise, douzaine, ligne, colonne: integer; var c, ip : char);
+procedure afficherCapital(capital: integer);
+function verifgain(choix, num, mise, douzaine, ligne, colonne: integer; c, ip : char) : integer;
+function tirage : integer;
+function couleur(num : integer) : char;
 
 implementation
 
@@ -146,73 +151,5 @@ begin
   writeln('----------------------------------------');
 end;
 
-procedure jouerRoulette(j: Integer;var liste: TListeProfils);
-var
-  ch, m, d, l, co, num, gain, capital: integer;
-  c, ip, rejouer: char;
-begin
-  capital := 70;
-  randomize;
-  writeln('----------------------------------------');
-  writeln(' Bienvenue à la Roulette !');
-  writeln('Capital de depart : ', capital, ' unites.');
-  writeln('----------------------------------------');
-
-  repeat
-    if capital <= 0 then
-    begin
-      writeln(' Vous n''avez plus d''argent... Le jeu est termine.');
-      break;
-    end;
-
-    afficherCapital(capital);
-    choix(ch);
-    mise(ch, m, d, l, co, c, ip);
-
-    if m > capital then
-    begin
-      writeln(' Vous ne pouvez pas miser plus que votre capital !');
-      continue;
-    end;
-
-    num := tirage;
-    writeln;
-    writeln('----------------------------------------');
-    writeln(' Numero tire : ', num, ' (', couleur(num), ')');
-    gain := verifgain(ch, num, m, d, l, co, c, ip);
-
-    if gain > 0 then
-    begin
-      writeln(' Gagne ! Vous remportez ', gain, ' unites.');
-      capital := capital + (gain - m); 
-    end
-    else
-    begin
-      writeln(' Perdu ! Vous perdez votre mise de ', m, ' unites.');
-      capital := capital - m;
-    end;
-
-    afficherCapital(capital);
-
-    if capital > 0 then
-    begin
-      write('Voulez-vous rejouer ? (o/n) : ');
-      readln(rejouer);
-    end
-    else
-      rejouer := 'n';
-
-  until (rejouer <> 'o') and (rejouer <> 'O');
-
-  if capital > liste.profils[j].scores[1] then
-    liste.profils[j].scores[1] := capital;
-
-  writeln;
-  writeln('----------------------------------------');
-  writeln(' Fin du jeu ! Capital final : ', capital, ' unites.');
-  writeln('Merci d''avoir joué !');
-  writeln('----------------------------------------');
-  readln;
-end;
 
 end.

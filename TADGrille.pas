@@ -8,7 +8,7 @@ Type TGrille = array [1..7,1..6] of integer;
 
 procedure CreerGrilleVide(var g : TGrille);
 function estColonneValide(c : integer; g : TGrille) : boolean;
-procedure PoserJeton(joueur : integer; var g : TGrille; c,l : integer);
+procedure PoserJeton(joueur : integer; var g : TGrille; var c,l : integer);
 function estGagne(g : TGrille; joueur,c,l : Integer) : Boolean;
 function verifligne(g : TGrille; joueur,l : Integer) : Boolean;
 function verifcolonne(g : TGrille; joueur,c : Integer) : Boolean;
@@ -41,7 +41,7 @@ begin
         estColonneValide:=true;
 end;
 
-procedure PoserJeton(joueur : integer; var g : TGrille ; c,l : integer);
+procedure PoserJeton(joueur : integer; var g : TGrille ; var c,l : integer);
 begin
     writeln('choissisez le numéro de la colonne (1-7) dans laquelle vous voulez poser votre jeton');
     repeat
@@ -50,90 +50,135 @@ begin
             writeln('cette colonne est pleine ou n''existe pas, veuillez en choisir une autre');
     until estColonneValide(c,g);
     l:=6;
-    while (g[c,l]<>0) do
+    while (l>0) and (g[c,l]<>0) do
         l:=l-1;
-    g[c,l]:=joueur;
+    if l>=1 then
+        g[c,l]:=joueur;
     
 end;
 
 function estGagne(g : TGrille; joueur,c,l : Integer) : Boolean;
+var
+    col,row: Integer;
 begin
-    verifligne(g,joueur,l);
-    verifcolonne(g,joueur,c);
-    verifdiagonale(g,joueur,c,l);
-    if (verifligne(g,joueur,l)=true) or (verifcolonne(g,joueur,c)=true) or (verifdiagonale(g,joueur,c,l)=true) then
-        estGagne:=True
-    else
-        estGagne:=False;
+    estGagne := False;
+    for col := 1 to 7 do
+    begin
+        for row := 1 to 6 do
+        begin
+            if g[col,row] = joueur then
+            begin
+                if (col <= 4) and (g[col+1,row] = joueur) and (g[col+2,row] = joueur) and (g[col+3,row] = joueur) then
+                begin
+                    estGagne := True;
+                    Exit;
+                end;
+                if (row <= 3) and (g[col,row+1] = joueur) and (g[col,row+2] = joueur) and (g[col,row+3] = joueur) then
+                begin
+                    estGagne := True;
+                    Exit;
+                end;
+                if (col <= 4) and (row <= 3) and (g[col+1,row+1] = joueur) and (g[col+2,row+2] = joueur) and (g[col+3,row+3] = joueur) then
+                begin
+                    estGagne := True;
+                    Exit;
+                end;
+                if (col <= 4) and (row >= 4) and (g[col+1,row-1] = joueur) and (g[col+2,row-2] = joueur) and (g[col+3,row-3] = joueur) then
+                begin
+                    estGagne := True;
+                    Exit;
+                end;
+            end;
+        end;
+    end;
 end;
 
 function verifligne(g : TGrille; joueur,l : Integer) : Boolean;
 var c,count : integer;
 begin
     count:=0;
+    verifligne := False;
     for c:=1 to 7 do
+    begin
         if g[c,l]=joueur then
             count:=count+1
         else
             count:=0;
-    if count>=4 then
-        verifligne:=True
-    else
-        verifligne:=False;
+        if count>=4 then
+        begin
+            verifligne := True;
+            Exit;
+        end;
+    end;
 end;
 
 function verifcolonne(g : TGrille; joueur,c : Integer) : Boolean;
 var l,count : integer;
 begin
     count:=0;
+    verifcolonne := False;
     for l:=1 to 6 do
+    begin
         if g[c,l]=joueur then
             count:=count+1
         else
             count:=0;
-    if count>=4 then
-        verifcolonne:=True
-    else
-        verifcolonne:=False;
+        if count>=4 then
+        begin
+            verifcolonne := True;
+            Exit;
+        end;
+    end;
 end;
 
 function verifdiagonale(g : TGrille; joueur,c,l : Integer) : Boolean;
 var dc,dl,count : integer;
 begin
-    verifdiagonale:=False;
-    count:=0;
-    dc:=c;
-    dl:=l;
-    repeat
-        dc:=dc-1;
-        dl:=dl-1;
-    until (dc=1) or (dl=1);
-    repeat
-        if g[dc,dl]=joueur then
-            count:=count+1
+    verifdiagonale := False;
+    dc := c;
+    dl := l;
+    while (dc > 1) and (dl > 1) do
+    begin
+        dc := dc - 1;
+        dl := dl - 1;
+    end;
+    count := 0;
+    while (dc <= 7) and (dl <= 6) do
+    begin
+        if g[dc,dl] = joueur then
+            count := count + 1
         else
-            count:=0;
-        dc:=dc+1;
-        dl:=dl+1;
-    until (dc=7) or (dl=6) or (count=4);
-    if count=4 then
-        verifdiagonale:=True;
-    dc:=c;
-    dl:=l;
-    repeat
-        dc:=dc+1;
-        dl:=dl+1;
-    until (dc=7) or (dl=6);
-    repeat
-        if g[dc,dl]=joueur then
-            count:=count+1
+            count := 0;
+        if count >= 4 then
+        begin
+            verifdiagonale := True;
+            Exit;
+        end;
+        dc := dc + 1;
+        dl := dl + 1;
+    end;
+    dc := c;
+    dl := l;
+    while (dc > 1) and (dl < 6) do
+    begin
+        dc := dc - 1;
+        dl := dl + 1;
+    end;
+    count := 0;
+    while (dc <= 7) and (dl >= 1) do
+    begin
+        if g[dc,dl] = joueur then
+            count := count + 1
         else
-            count:=0;
-        dc:=dc-1;
-        dl:=dl-1;
-    until (dc=1) or (dl=1) or (count=4);
-    if count=4 then
-        verifdiagonale:=True;
+            count := 0;
+        if count >= 4 then
+        begin
+            verifdiagonale := True;
+            Exit;
+        end;
+        dc := dc + 1;
+        dl := dl - 1;
+    end;
 end;
 procedure ModifScoreP4(joueur : integer; var p : TListeProfils);
 begin

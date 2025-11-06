@@ -17,7 +17,7 @@ procedure Choixjeu(nbJ : Integer; var choixj : Integer);
 procedure UnJoueur(var ListeProfils : TListeProfils);
 procedure DeuxJoueurs(var ListeProfils : TListeProfils);
 procedure Parametres(var ListeProfils : TListeProfils);
-procedure Records(ListeProfils : TListeProfils);
+procedure Records(listej : TListeJeux; ListeProfils : TListeProfils);
 procedure AjouterProfil(var ListeProfils : TListeProfils);
 procedure SupprimerProfil(var ListeProfils : TListeProfils);
 procedure ModifierProfil(var ListeProfils : TListeProfils);
@@ -25,6 +25,8 @@ procedure chargerProfils(var ListeProfils : TListeProfils);
 procedure sauvegarderProfils( const ListeProfils : TListeProfils);
 procedure initNomJeux(var listej : TListeJeux);
 procedure choixJoueur(p : Integer; var j: Integer);
+procedure AjouterProfilTest(var ListeProfils : TListeProfils);
+
 
 implementation
 
@@ -43,7 +45,7 @@ end;
 procedure menu(ListeProfils: TListeProfils; choix : Integer);
 begin
 	case choix of
-	1: Records(ListeProfils);
+	1: Records(listej,ListeProfils);
 	2: UnJoueur(ListeProfils);
 	3: DeuxJoueurs(ListeProfils);
 	4: Parametres(ListeProfils);
@@ -55,14 +57,22 @@ procedure Choixjeu(nbJ : Integer; var choixj : Integer);
 var i : Integer;
 begin
 	initNomJeux(listej);
-	for i:= 1 to length(listej.jeu) do
-		writeln(i,'-',listej.jeu[i]);
+	if nbJ = 1 then
+	begin
+		for i:= low(listej.jeu1) to high(listej.jeu1) do
+			writeln(i,'-',listej.jeu1[i]);
+	end
+	else
+	begin
+		for i:= low(listej.jeu2) to high(listej.jeu2) do
+			writeln(MAX_JEUX_SOLO + i,'-',listej.jeu2[i]);
+	end;
 	repeat
 		writeln('Quel jeu voulez-vous faire ?');
 		readln(choixj);
-		if (choixj<1) or (choixj>3) then
+		if (choixj<1) or (choixj>MAX_SCORES) then
 			writeln('Choix invalide, veuillez reessayer.');
-	until (choixj >= 1) and (choixj <= 3);
+	until (choixj >= 1) and (choixj <= MAX_SCORES);
 end;
 
 procedure lancerJeu(j1,j2,choixj : Integer; var ListeProfils : TListeProfils);
@@ -72,11 +82,11 @@ begin
 							jouerRoulette; 
 							scorecasino(ListeProfils, j1);
 						 end;
-					2: begin
-							puissance4.
+					3: begin
+							puissance4.puissance4;
 							scorepuissance4(ListeProfils, j1, j2);
 						 end;
-			{3: begin
+			{2: begin
 					 frogger();
 					 scorefrogger(ListeProfils, j1);
 				 end;}
@@ -102,26 +112,38 @@ begin
 	lancerJeu(j1, j2, choixj, ListeProfils);
 end;
 
-procedure Records(ListeProfils : TListeProfils);
-var i,j, score : Integer;
+procedure Records(listej : TListeJeux; ListeProfils : TListeProfils);
+var i,j, score, scoreIndex : Integer;
 	nomrecord : string;
 begin
 	initNomJeux(listej);
 	writeln('Affichage des records :');
-	for i:=1 to 3 do
+	for i:=low(listej.jeu1) to high(listej.jeu1) do
 		begin
 			score := 0;
 			nomrecord := '';
+			scoreIndex := i;
 			for j:=0 to length(ListeProfils.profils)-1 do
-				if ListeProfils.profils[j].scores[i] > score then
+				if ListeProfils.profils[j].scores[scoreIndex] > score then
 					begin
-						score := ListeProfils.profils[j].scores[i];
+						score := ListeProfils.profils[j].scores[scoreIndex];
 						nomrecord := ListeProfils.profils[j].nom;
 					end;
-			writeln(listej.jeu[j],' : ',nomrecord,' avec un score de ',score);
+			writeln(listej.jeu1[i],' : ',nomrecord,' avec un score de ',score);
 		end;
-
-
+	for i:=low(listej.jeu2) to high(listej.jeu2) do
+		begin
+			score := 0;
+			nomrecord := '';
+				scoreIndex := MAX_JEUX_SOLO + i; // map multijoueur game i to score index
+			for j:=0 to length(ListeProfils.profils)-1 do
+				if ListeProfils.profils[j].scores[scoreIndex] > score then
+					begin
+						score := ListeProfils.profils[j].scores[scoreIndex];
+						nomrecord := ListeProfils.profils[j].nom;
+					end;
+			writeln(listej.jeu2[i],' : ',nomrecord,' avec un score de ',score);
+		end;
 end;
 
 procedure Parametres(var ListeProfils : TListeProfils);
@@ -145,38 +167,52 @@ end;
 procedure AjouterProfil(var ListeProfils : TListeProfils);
 var i : Integer;
 begin
+	setlength(ListeProfils.profils, length(ListeProfils.profils) + 1);
 	writeln('choissisez un nom pour le nouveau profil :');
-	readln(liste.profils[length(liste.profils)+1].nom);
-	for i:=1 to 3 do
-		liste.profils[length(liste.profils)].scores[i]:=0;
+	readln(ListeProfils.profils[high(ListeProfils.profils)].nom);
+	for i:=1 to MAX_SCORES do
+		ListeProfils.profils[high(ListeProfils.profils)].scores[i]:=0;
 end;
 
 procedure SupprimerProfil(var ListeProfils : TListeProfils);
 var i,j : Integer;
 	nomASupprimer : string;
 begin
-	writeln('choissisez le nom du profil à supprimer :');
+	writeln('choissisez le nom du profil a supprimer :');
+	for i:=0 to length(ListeProfils.profils)-1 do
+		writeln(ListeProfils.profils[i].nom);
 	readln(nomASupprimer);
-	for i:=0 to length(liste.profils)-1 do
-		if liste.profils[i].nom = nomASupprimer then
-			for j:=i to length(liste.profils)-1 do
-				liste.profils[j]:=liste.profils[j+1];
-	setlength(liste.profils,length(liste.profils)-1);
+	for i:=0 to length(ListeProfils.profils)-1 do
+		if ListeProfils.profils[i].nom = nomASupprimer then
+		begin
+			for j:=i to length(ListeProfils.profils)-2 do
+				ListeProfils.profils[j]:=ListeProfils.profils[j+1];
+			setlength(ListeProfils.profils,length(ListeProfils.profils)-1);
+			break;
+		end;
 end;
 
 procedure ModifierProfil(var ListeProfils : TListeProfils);
 var i : Integer;
 	nomAModifier,nouveauNom : string;
+	trouve : Boolean;
 begin
+	trouve := False;
 	writeln('choissisez le nom du profil à modifier :');
+	for i:=0 to length(ListeProfils.profils)-1 do
+		writeln(ListeProfils.profils[i].nom);
 	readln(nomAModifier);
-	for i:=0 to length(liste.profils)-1 do
-		if liste.profils[i].nom = nomAModifier then
-			begin
-				writeln('Entrez le nouveau nom :');
-				readln(nouveauNom);
-				liste.profils[i].nom := nouveauNom;
-			end;
+	for i:=0 to length(ListeProfils.profils)-1 do
+		if ListeProfils.profils[i].nom = nomAModifier then
+		begin
+			writeln('Entrez le nouveau nom :');
+			readln(nouveauNom);
+			ListeProfils.profils[i].nom := nouveauNom;
+			trouve := True;
+			break;
+		end;
+	if not trouve then
+		writeln('Profil non trouve.');
 end;
 
 
@@ -191,7 +227,7 @@ begin
 	for i := 0 to length(ListeProfils.profils) - 1 do
 	begin
 		writeLn(f, ListeProfils.profils[i].nom);
-		for j := 1 to 2 do
+		for j := 1 to MAX_SCORES do
 			writeLn(f, ListeProfils.profils[i].scores[j]);
 	end;
 		closefile(f);
@@ -216,7 +252,7 @@ begin
 	for i := 0 to n - 1 do
 	begin
 		readLn(f, ListeProfils.profils[i].nom);
-		for j := 1 to 3 do
+		for j := 1 to MAX_SCORES do
 			readLn(f, ListeProfils.profils[i].scores[j]);
 	end;
 		closefile(f);
@@ -224,20 +260,33 @@ end;
 
 procedure initNomJeux(var listej : TListeJeux);
 begin
-	listej.jeu[1] := 'casino';
-	listej.jeu[2] := 'Puissance 4';
-	listej.jeu[3] := 'frogger';
+	listej.jeu1[1] := 'Casino';
+	listej.jeu1[2] := 'Frogger';
+	listej.jeu2[1] := 'Puissance 4';
 end;
 
 procedure choixJoueur(p : Integer; var j: Integer);
 var i : Integer;
 begin
-	if length(ListeProfils.profils) = 0 then
+	if length(ListeProfils.profils) < p then
+	begin
+	repeat
 		AjouterProfil(ListeProfils);
+	until length(ListeProfils.profils) >= p;
+	end;
 	for i:=0 to length(ListeProfils.profils)-1 do
 		writeln(i+1,'-',ListeProfils.profils[i].nom);
 	writeln('choissez un profil pour le joueur ',p,':');
 	readln(j);
+end;
+
+procedure AjouterProfilTest(var ListeProfils : TListeProfils);
+var i : Integer;
+begin
+	setlength(ListeProfils.profils, length(ListeProfils.profils)+1);
+	ListeProfils.profils[high(ListeProfils.profils)].nom := 'Test';
+	for i := 1 to MAX_SCORES do
+		ListeProfils.profils[high(ListeProfils.profils)].scores[i] := 0;
 end;
 
 end.

@@ -5,6 +5,8 @@ var choixmenu : LongInt;
 begin
     writeln('Bienvenue dans le menu des mini-jeux !');
     chargerProfils(listep);
+    if length(listep.profils) = 0 then
+        AjouterProfilTest(listep);
     choixmenu := 0;
     repeat
         choix(choixmenu);

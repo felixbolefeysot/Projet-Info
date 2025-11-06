@@ -2,7 +2,7 @@ unit casino;
 
 interface 
 
-uses programmeroulette, Typesmenu, crt;
+uses programmeroulette, Typesmenu;
 
 var capital : Integer;
 

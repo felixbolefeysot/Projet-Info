@@ -135,7 +135,7 @@ begin
 		begin
 			score := 0;
 			nomrecord := '';
-				scoreIndex := MAX_JEUX_SOLO + i; // map multijoueur game i to score index
+				scoreIndex := MAX_JEUX_SOLO + i; 
 			for j:=0 to length(ListeProfils.profils)-1 do
 				if ListeProfils.profils[j].scores[scoreIndex] > score then
 					begin

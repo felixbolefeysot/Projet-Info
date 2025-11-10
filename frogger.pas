@@ -44,6 +44,7 @@ var
   hauteurPrecedente: integer;
   niveau: integer;
   nbVoituresActuel: integer;
+  oldGrenouilleX, oldGrenouilleY: integer;  { Position précédente pour effacement }
 
   
 
@@ -111,10 +112,22 @@ end;
 
 procedure AfficherGrenouille;
 begin
+  { Effacer ancienne position }
+  if (oldGrenouilleX > 0) and (oldGrenouilleY > 0) then
+  begin
+    GotoXY(oldGrenouilleX, oldGrenouilleY);
+    Write(' ');
+  end;
+  
+  { Afficher nouvelle position }
   GotoXY(grenouille.x, grenouille.y);
   TextColor(Green);
   Write('@');
   TextColor(White);
+  
+  { Mémoriser position pour prochain effacement }
+  oldGrenouilleX := grenouille.x;
+  oldGrenouilleY := grenouille.y;
 end;
 
 procedure EffacerGrenouille(x, y: Integer);
@@ -122,6 +135,7 @@ begin
   GotoXY(x, y);
   Write(' ');
 end;
+
 
 
 procedure DeplacerVoitures;
@@ -316,6 +330,8 @@ end;
   grenouille.x := 40;
   grenouille.y := 24;
   hauteurPrecedente := grenouille.y;
+  oldGrenouilleX := 0;  { Réinitialiser position précédente }
+  oldGrenouilleY := 0;
 end;
 
 // ----------------------- Programme principal -----------------------
@@ -336,6 +352,8 @@ begin
   grenouille.vie := 3;
   score := 0;
   hauteurPrecedente := grenouille.y;
+  oldGrenouilleX := 0;  { Initialiser position précédente }
+  oldGrenouilleY := 0;
 
   { Instructions }
   TextColor(Yellow);

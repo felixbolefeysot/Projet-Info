@@ -230,8 +230,10 @@ procedure sauvegarderProfils(const ListeProfils : TListeProfils);
 var
 	f : TextFile;
 	i, j : Integer;
+	profilsPath : string;
 begin
-	assignfile(f, 'profils.txt');
+	profilsPath := ExtractFilePath(ParamStr(0)) + 'profils.txt';
+	assignfile(f, profilsPath);
 	rewrite(f);
 	writeLn(f, length(ListeProfils.profils));
 	for i := 0 to length(ListeProfils.profils) - 1 do
@@ -240,7 +242,7 @@ begin
 		for j := 1 to MAX_SCORES do
 			writeLn(f, ListeProfils.profils[i].scores[j]);
 	end;
-		closefile(f);
+	closefile(f);
 end;
 
 
@@ -248,14 +250,16 @@ procedure chargerProfils(var ListeProfils : TListeProfils);
 var
 	f : TextFile;
 	i, j, n : Integer;
+	profilsPath : string;
 begin
-	if not FileExists('profils.txt') then
+	profilsPath := ExtractFilePath(ParamStr(0)) + 'profils.txt';
+	if not FileExists(profilsPath) then
 	begin
 		writeln('Fichier profils.txt introuvable, aucun profil charge.');
 		setlength(ListeProfils.profils, 0);
 		exit;
 	end;
-		assignfile(f, 'profils.txt');
+	assignfile(f, profilsPath);
 	reset(f);
 	readLn(f, n);
 	setlength(ListeProfils.profils, n);
@@ -265,7 +269,7 @@ begin
 		for j := 1 to MAX_SCORES do
 			readLn(f, ListeProfils.profils[i].scores[j]);
 	end;
-		closefile(f);
+	closefile(f);
 end;
 
 procedure initNomJeux(var listej : TListeJeux);

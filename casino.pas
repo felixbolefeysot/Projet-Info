@@ -12,10 +12,10 @@ procedure scorecasino(var liste: TListeProfils; j: Integer);
 implementation
   procedure jouerRoulette;
 var
-  ch, m, d, l, co, num, gain, capital: integer;
+  ch, m, d, l, co, num, gain: integer;
   c, ip, rejouer: char;
 begin
-  capital := 70;
+  capital := 70; 
   randomize;
   writeln('----------------------------------------');
   writeln(' Bienvenue à la Roulette !');

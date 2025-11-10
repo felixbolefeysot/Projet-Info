@@ -182,7 +182,7 @@ begin
 end;
 procedure ModifScoreP4(joueur : integer; var p : TListeProfils);
 begin
-    p.profils[joueur].scores[1]:=p.profils[joueur].scores[1]+1;
+    p.profils[joueur].scores[MAX_JEUX_SOLO + 1] := p.profils[joueur].scores[MAX_JEUX_SOLO + 1] + 1;
 end;
 
 procedure afficherGrille(g : TGrille);

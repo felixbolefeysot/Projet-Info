@@ -74,7 +74,10 @@ begin
 end;
 
 procedure lancerJeu(j1,j2,choixj : Integer; var ListeProfils : TListeProfils);
+var
+    score: Integer;  { Variable locale pour le score de Frogger }
 begin
+    score := 0;  { Initialiser le score }
     case choixj of
         1: begin
             jouerRoulette; 

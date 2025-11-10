@@ -3,7 +3,6 @@ unit Frogger;
 {$MODE OBJFPC}
 {$H+}
 
-
 interface 
 
 uses crt, sysutils, typesmenu;
@@ -116,6 +115,12 @@ begin
   TextColor(Green);
   Write('@');
   TextColor(White);
+end;
+
+procedure EffacerGrenouille(x, y: Integer);
+begin
+  GotoXY(x, y);
+  Write(' ');
 end;
 
 
@@ -316,7 +321,12 @@ end;
 // ----------------------- Programme principal -----------------------
 procedure Frogger(var score : Integer);
 begin
+  { Initialisation CRT pour compatibilité Windows/Linux }
+  TextBackground(Black);
+  TextColor(White);
   clrscr;
+  CursorOff;  { Masquer le curseur }
+  
   key := ' ';  { Initialiser la touche }
   niveau := 1;
   nbVoituresActuel := NB_VOITURES;
@@ -330,15 +340,18 @@ begin
   { Instructions }
   TextColor(Yellow);
   GotoXY(10, 12);
-  WriteLn('Utilisez les fleches ou ZQSD pour bouger, ESC pour quitter');
+  WriteLn('Utilisez les fleches ou ZQSD pour bouger, ENTREE pour quitter');
   TextColor(White);
   GotoXY(10, 14);
   WriteLn('Appuyez sur une touche pour commencer...');
   ReadKey;
 
+  { Affichage initial complet }
+  clrscr;
+  AfficherZoneVictoire;
+
   repeat
-    clrscr;
-    AfficherZoneVictoire;
+    { Ne PAS effacer tout l'écran - optimisation ! }
     DeplacerVoitures;
     AfficherVoitures;
     DeplacementGrenouille;
@@ -351,7 +364,7 @@ begin
       NouveauNiveau;
 
     Delay(80);
-  until (key = #27) or (grenouille.vie <= 0);  
+  until (key = #13) or (grenouille.vie <= 0);  { #13 = Entrée pour quitter }
 
   { Écran de fin }
   clrscr;
@@ -381,6 +394,12 @@ begin
   GotoXY(20, 15);
   WriteLn('Appuyez sur une touche pour continuer...');
   ReadKey;
+  
+  { Restaurer le curseur et réinitialiser les couleurs }
+  CursorOn;
+  TextBackground(Black);
+  TextColor(White);
+  clrscr;
 end;
 
 procedure modifscorefrogger(score : Integer; var liste: TListeProfils; j: Integer);

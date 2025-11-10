@@ -4,7 +4,7 @@ unit menu;
 
 interface
 
-uses Typesmenu, crt, SysUtils, puissance4, casino;
+uses Typesmenu, crt, SysUtils, puissance4, casino, frogger;
 
 var choixj : Integer;
 	listej : TListeJeux;
@@ -86,11 +86,11 @@ begin
             scorepuissance4(ListeProfils, j1, j2);
             sauvegarderProfils(ListeProfils); 
         end;
-        {2: begin
-            frogger();
-            scorefrogger(ListeProfils, j1);
+        2: begin
+            frogger.Frogger(score);
+            modifscorefrogger(score, ListeProfils, j1);
             sauvegarderProfils(ListeProfils); 
-        end;}
+        end;
     end;
 end;
 	

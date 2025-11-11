@@ -10,8 +10,6 @@ uses crt, sysutils, typesmenu;
 procedure Frogger(var score : Integer);
 procedure modifscorefrogger(score : Integer; var liste: TListeProfils; j: Integer);
 
-var score : Integer;
-
 implementation
 
 const
@@ -271,7 +269,7 @@ begin
 end;
 
 
-procedure AfficherScore;
+procedure AfficherScore(score: Integer);
 begin
   { Positionner et effacer la ligne }
   GotoXY(1, 1);
@@ -383,7 +381,7 @@ begin
     AfficherGrenouille;
     ToucheVoiture;
     MettreAJourScore(score);
-    AfficherScore;
+    AfficherScore(score);  { Passer le score en paramètre }
 
     if Victoire then
     begin

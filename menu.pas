@@ -74,6 +74,8 @@ begin
 end;
 
 procedure lancerJeu(j1,j2,choixj : Integer; var ListeProfils : TListeProfils);
+var
+    score: Integer;  
 begin
     case choixj of
         1: begin

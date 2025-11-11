@@ -326,6 +326,9 @@ end;
   Delay(600);
   {$ENDIF}
 
+  { Effacer le texte et redessiner l'écran }
+  clrscr;
+  
   // Repositionner la grenouille
   grenouille.x := 40;
   grenouille.y := 24;
@@ -379,7 +382,10 @@ begin
     AfficherScore;
 
     if Victoire then
+    begin
       NouveauNiveau;
+      AfficherZoneVictoire;  { Réafficher la zone après clrscr du nouveau niveau }
+    end;
 
     Delay(80);
   until (key = #13) or (grenouille.vie <= 0);  { #13 = Entrée pour quitter }
@@ -424,7 +430,7 @@ procedure modifscorefrogger(score : Integer; var liste: TListeProfils; j: Intege
 var
   scoreIndex: Integer;
 begin
-  scoreIndex := MAX_JEUX_SOLO + 2;
+  scoreIndex := 2;  
   if score > liste.profils[j].scores[scoreIndex] then
     liste.profils[j].scores[scoreIndex] := score;
 end;

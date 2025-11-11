@@ -4,7 +4,7 @@ unit menu;
 
 interface
 
-uses Typesmenu, crt, SysUtils, puissance4, casino, frogger;
+uses Typesmenu, crt, SysUtils, puissance4, casino, frogger, morpion;
 
 var choixj : Integer;
 	listej : TListeJeux;
@@ -93,6 +93,11 @@ begin
             modifscorefrogger(score, ListeProfils, j1);
             sauvegarderProfils(ListeProfils); 
         end;
+		4: begin
+			morpion.morpion(ListeProfils, j1, j2);
+			morpion.scoremorpion(ListeProfils, j1, j2);
+			sauvegarderProfils(ListeProfils); 
+		end;
     end;
 end;
 	
@@ -279,6 +284,7 @@ begin
 	listej.jeu1[1] := 'Casino';
 	listej.jeu1[2] := 'Frogger';
 	listej.jeu2[1] := 'Puissance 4';
+	listej.jeu2[2] := 'Morpion';
 end;
 
 procedure choixJoueur(p : Integer; var j: Integer; var ListeProfils : TListeProfils);

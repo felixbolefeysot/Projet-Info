@@ -272,8 +272,16 @@ end;
 
 
 procedure AfficherScore;
+var
+  i: Integer;
 begin
-  GotoXY(1,1);
+  { Effacer la ligne 1 complètement }
+  GotoXY(1, 1);
+  for i := 1 to LARGEUR_ECRAN do
+    Write(' ');
+  
+  { Afficher le nouveau score }
+  GotoXY(1, 1);
   TextColor(White);
   Write('Vies: ', grenouille.vie, '  |  Score: ', score, '  |  Niveau: ', niveau);
 end;

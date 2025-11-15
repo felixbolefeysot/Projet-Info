@@ -150,6 +150,7 @@ begin
     dernierGagnant := 0;
     
     repeat
+        ClrScr();
         afficherGrilleMorpion(g);
         writeln('Joueur ', j, ', entrez la colonne (1-3) : ');
         readln(c);
@@ -174,6 +175,7 @@ begin
         estGagne(g, symbole, c, l, gagne);
         if gagne then
         begin
+            ClrScr();
             afficherGrilleMorpion(g);
             writeln('Le joueur ', j, ' a gagne !');
             dernierGagnant := j;
@@ -181,6 +183,7 @@ begin
         end;
         if tour = 9 then
         begin
+            ClrScr();
             afficherGrilleMorpion(g);
             writeln('Match nul !');
             break;

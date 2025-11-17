@@ -14,9 +14,9 @@ Const
   LARGEUR_ECRAN = 80;
   HAUTEUR_ECRAN = 25;
   NB_OBJETS = 15;
-  FRAME_DELAY = 140; 
-  GRAVITY_TICKS = 2; 
-  OBJECT_MOVE_TICKS = 2; 
+  FRAME_DELAY = 60; 
+  GRAVITY_TICKS = 1;
+  OBJECT_MOVE_TICKS = 1;
 
 Type TObjet = record
     x, y: integer;
@@ -27,7 +27,8 @@ Type TObjet = record
   
 Type TOiseau = record
     x, y: integer;
-    vie: integer;
+  vie: integer;
+  vy: integer; 
   end;
   
 var
@@ -44,7 +45,7 @@ begin
   begin
     objet[i].x := LARGEUR_ECRAN + Random(20);
     objet[i].y := Random(HAUTEUR_ECRAN - 4) + 4;
-    objet[i].vitesse := Random(4) + 1;
+    objet[i].vitesse := Random(2) + 1;
 
     case objet[i].vitesse of
       1: objet[i].taille := 1; 
@@ -114,7 +115,7 @@ begin
     begin
       objet[i].x := LARGEUR_ECRAN;
       objet[i].y := Random(HAUTEUR_ECRAN - 4) + 4;
-        objet[i].vitesse := Random(3) + 1;
+          objet[i].vitesse := Random(2) + 1;
 
       case objet[i].vitesse of
         1: objet[i].taille := 1; 
@@ -138,6 +139,7 @@ procedure DeplacementOiseau;
 var
   k: char;
 begin
+  // handle input: set upward velocity on flap, or quit on Enter
   if KeyPressed then
   begin
     k := ReadKey;
@@ -145,34 +147,33 @@ begin
       k := ReadKey;
     if (k = #72) or (k = ' ') or (k = 'w') or (k = 'W') then
     begin
-      if oiseau.y > 1 then
-      begin
-        EffacerOiseau(oiseau.x, oiseau.y);
-        if oiseau.y > 2 then
-          oiseau.y := oiseau.y - 2
-        else
-          oiseau.y := 1;
-        AfficherOiseau;
-      end;
+      // instant upward impulse
+      oiseau.vy := -3;
     end
     else if k = #13 then
     begin
       oiseau.vie := 0;
     end;
   end;
+
+  // gravity: increase vertical speed, applied every GRAVITY_TICKS frames
   if (GRAVITY_TICKS <= 1) or (tickCounter mod GRAVITY_TICKS = 0) then
+    oiseau.vy := oiseau.vy + 1;
+
+  // apply vertical velocity
+  if oiseau.vy <> 0 then
   begin
-    if oiseau.y < HAUTEUR_ECRAN then
-    begin
-      EffacerOiseau(oiseau.x, oiseau.y);
-      oiseau.y := oiseau.y + 1;
-      AfficherOiseau;
-    end
-    else
+    EffacerOiseau(oiseau.x, oiseau.y);
+    oiseau.y := oiseau.y + oiseau.vy;
+    // clamp and detect ground
+    if oiseau.y < 1 then
+      oiseau.y := 1
+    else if oiseau.y >= HAUTEUR_ECRAN then
     begin
       oiseau.y := HAUTEUR_ECRAN;
       oiseau.vie := 0;
     end;
+    AfficherOiseau;
   end;
 end;
 
@@ -230,6 +231,7 @@ begin
   oiseau.x := 10;
   oiseau.y := HAUTEUR_ECRAN div 2;
   oiseau.vie := 3;
+  oiseau.vy := 0;
   InitObjet;
   tickCounter := 0;
   AfficherOiseau;
@@ -293,6 +295,8 @@ begin
   until ch = #13;
   if sessionBest > score then
     score := sessionBest;
+  delay(500);
+  clrscr;
 end;
  
 procedure scoreflappy(j1, score: Integer; var liste : TListeProfils);

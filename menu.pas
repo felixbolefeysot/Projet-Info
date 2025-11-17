@@ -130,6 +130,7 @@ var i,j, score, scoreIndex : Integer;
     nomrecord : string;
 begin
     initNomJeux(listej);
+	clrscr;
     writeln('Affichage des records :');
     for i:= low(listej.jeu1) to high(listej.jeu1) do
     begin

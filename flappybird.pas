@@ -24,12 +24,17 @@ Type TObjet = record
     vitesse: integer;
     symbole: string;
     taille: Integer;
+  prevX: Integer;
+  prevY: Integer;
+  prevTaille: Integer;
   end;
   
 Type TOiseau = record
     x, y: integer;
   dead: boolean;
-  vy: integer; 
+  vy: integer;
+  prevX: Integer;
+  prevY: Integer;
   end;
   
 var
@@ -44,9 +49,12 @@ begin
   Randomize;
   for i := 1 to NB_OBJETS do
   begin
-  objet[i].x := LARGEUR_ECRAN + Random(40);
+    objet[i].x := LARGEUR_ECRAN + Random(40);
     objet[i].y := Random(HAUTEUR_ECRAN - 4) + 4;
     objet[i].vitesse := Random(2) + 1;
+    objet[i].prevX := objet[i].x;
+    objet[i].prevY := objet[i].y;
+    objet[i].prevTaille := 1;
 
     case objet[i].vitesse of
       1: objet[i].taille := 1; 
@@ -61,6 +69,7 @@ begin
       3: objet[i].symbole := '~';  
       4: objet[i].symbole := '&';  
     end;
+    objet[i].prevTaille := objet[i].taille;
   end;
 end;  
 
@@ -79,6 +88,9 @@ begin
         Write(objet[i].symbole);
       end;
     end;
+    objet[i].prevX := objet[i].x;
+    objet[i].prevY := objet[i].y;
+    objet[i].prevTaille := objet[i].taille;
   end;
   TextColor(White);
 end;
@@ -91,6 +103,8 @@ begin
     TextColor(Yellow);
     Write('O');
     TextColor(White);
+    oiseau.prevX := oiseau.x;
+    oiseau.prevY := oiseau.y;
   end;
 end;
 
@@ -156,10 +170,10 @@ begin
   end;
   if (GRAVITY_TICKS <= 1) or (tickCounter mod GRAVITY_TICKS = 0) then
     oiseau.vy := oiseau.vy + 1;
-  if oiseau.vy <> 0 then
-  begin
-    EffacerOiseau(oiseau.x, oiseau.y);
-    oiseau.y := oiseau.y + oiseau.vy;
+  if (oiseau.prevX >= 1) and (oiseau.prevY >= 1) then
+    EffacerOiseau(oiseau.prevX, oiseau.prevY);
+
+  oiseau.y := oiseau.y + oiseau.vy;
     if oiseau.y < MIN_OISEAU_Y then
     begin
       oiseau.y := MIN_OISEAU_Y;
@@ -170,8 +184,7 @@ begin
       oiseau.y := HAUTEUR_ECRAN;
       oiseau.dead := True;
     end;
-    AfficherOiseau;
-  end;
+  AfficherOiseau;
 end;
 
 procedure explosion(x, y: Integer);
@@ -206,11 +219,11 @@ var
 begin
   for i := 1 to NB_OBJETS do
   begin
-    for j := 0 to objet[i].taille - 1 do
+    for j := 0 to objet[i].prevTaille - 1 do
     begin
-      if (objet[i].x + j >= 1) and (objet[i].x + j <= LARGEUR_ECRAN) and (objet[i].y >= 1) and (objet[i].y <= HAUTEUR_ECRAN) then
+      if (objet[i].prevX + j >= 1) and (objet[i].prevX + j <= LARGEUR_ECRAN) and (objet[i].prevY >= 1) and (objet[i].prevY <= HAUTEUR_ECRAN) then
       begin
-        GotoXY(objet[i].x + j, objet[i].y);
+        GotoXY(objet[i].prevX + j, objet[i].prevY);
         Write(' ');
       end;
     end;

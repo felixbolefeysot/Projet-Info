@@ -141,7 +141,10 @@ begin
       if oiseau.y > 1 then
       begin
         EffacerOiseau(oiseau.x, oiseau.y);
-        oiseau.y := oiseau.y - 1;
+        if oiseau.y > 2 then
+          oiseau.y := oiseau.y - 2
+        else
+          oiseau.y := 1;
         AfficherOiseau;
       end;
     end
@@ -155,6 +158,11 @@ begin
     EffacerOiseau(oiseau.x, oiseau.y);
     oiseau.y := oiseau.y + 1;
     AfficherOiseau;
+  end
+  else
+  begin
+    oiseau.y := HAUTEUR_ECRAN;
+    oiseau.vie := 0;
   end;
 end;
 
@@ -169,14 +177,14 @@ begin
     begin
       EffacerOiseau(oiseau.x, oiseau.y);
       oiseau.vie := oiseau.vie - 1;
-      if oiseau.vie = 0 then
+      if oiseau.vie <= 0 then
       begin
-        GotoXY(LARGEUR_ECRAN div 2 - 5, HAUTEUR_ECRAN div 2);
-        Write('Game Over');
-        ReadLn;
-        Halt;
-      end;
-      AfficherOiseau;
+        oiseau.vie := 0;
+        AfficherOiseau;
+        exit;
+      end
+      else
+        AfficherOiseau;
     end;
   end;
 end;
@@ -246,6 +254,11 @@ begin
     MettreAJourScore(score);
     Delay(100);
   until oiseau.vie <= 0;
+  GotoXY(LARGEUR_ECRAN div 2 - 5, HAUTEUR_ECRAN div 2);
+  TextColor(Red);
+  Write('Game Over');
+  TextColor(White);
+  ReadLn;
 end;
 
 procedure scoreflappy(j1, score: Integer; var liste : TListeProfils);

@@ -14,7 +14,7 @@ Const
   LARGEUR_ECRAN = 80;
   HAUTEUR_ECRAN = 25;
   NB_OBJETS = 15;
-  FRAME_DELAY = 60; 
+  FRAME_DELAY = 90; 
   GRAVITY_TICKS = 1;
   OBJECT_MOVE_TICKS = 1;
 
@@ -139,7 +139,6 @@ procedure DeplacementOiseau;
 var
   k: char;
 begin
-  // handle input: set upward velocity on flap, or quit on Enter
   if KeyPressed then
   begin
     k := ReadKey;
@@ -147,25 +146,19 @@ begin
       k := ReadKey;
     if (k = #72) or (k = ' ') or (k = 'w') or (k = 'W') then
     begin
-      // instant upward impulse
-      oiseau.vy := -3;
+      oiseau.vy := -2;
     end
     else if k = #13 then
     begin
       oiseau.vie := 0;
     end;
   end;
-
-  // gravity: increase vertical speed, applied every GRAVITY_TICKS frames
   if (GRAVITY_TICKS <= 1) or (tickCounter mod GRAVITY_TICKS = 0) then
     oiseau.vy := oiseau.vy + 1;
-
-  // apply vertical velocity
   if oiseau.vy <> 0 then
   begin
     EffacerOiseau(oiseau.x, oiseau.y);
     oiseau.y := oiseau.y + oiseau.vy;
-    // clamp and detect ground
     if oiseau.y < 1 then
       oiseau.y := 1
     else if oiseau.y >= HAUTEUR_ECRAN then

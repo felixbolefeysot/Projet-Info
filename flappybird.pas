@@ -13,9 +13,9 @@ implementation
 Const
   LARGEUR_ECRAN = 80;
   HAUTEUR_ECRAN = 25;
-  NB_OBJETS = 15;
-  FRAME_DELAY = 90; 
-  GRAVITY_TICKS = 1;
+  NB_OBJETS = 9; 
+  FRAME_DELAY = 100; 
+  GRAVITY_TICKS = 2; 
   OBJECT_MOVE_TICKS = 1;
 
 Type TObjet = record
@@ -43,7 +43,7 @@ begin
   Randomize;
   for i := 1 to NB_OBJETS do
   begin
-    objet[i].x := LARGEUR_ECRAN + Random(20);
+  objet[i].x := LARGEUR_ECRAN + Random(40);
     objet[i].y := Random(HAUTEUR_ECRAN - 4) + 4;
     objet[i].vitesse := Random(2) + 1;
 
@@ -113,9 +113,9 @@ begin
       objet[i].x := objet[i].x - objet[i].vitesse;
     if objet[i].x < 1 then
     begin
-      objet[i].x := LARGEUR_ECRAN;
-      objet[i].y := Random(HAUTEUR_ECRAN - 4) + 4;
-          objet[i].vitesse := Random(2) + 1;
+    objet[i].x := LARGEUR_ECRAN + Random(20);
+    objet[i].y := Random(HAUTEUR_ECRAN - 4) + 4;
+      objet[i].vitesse := Random(2) + 1;
 
       case objet[i].vitesse of
         1: objet[i].taille := 1; 

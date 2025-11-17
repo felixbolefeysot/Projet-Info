@@ -289,7 +289,7 @@ begin
   writeln('session best: ', sessionBest);
   if sessionBest > score then
     score := sessionBest;
-  delay(500);
+  delay(1500);
   clrscr;
 end;
  

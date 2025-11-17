@@ -17,6 +17,7 @@ Const
   FRAME_DELAY = 100; 
   GRAVITY_TICKS = 2; 
   OBJECT_MOVE_TICKS = 1;
+  MIN_OISEAU_Y = 4; 
 
 Type TObjet = record
     x, y: integer;
@@ -159,8 +160,11 @@ begin
   begin
     EffacerOiseau(oiseau.x, oiseau.y);
     oiseau.y := oiseau.y + oiseau.vy;
-    if oiseau.y < 1 then
-      oiseau.y := 1
+    if oiseau.y < MIN_OISEAU_Y then
+    begin
+      oiseau.y := MIN_OISEAU_Y;
+      oiseau.vy := 0; 
+    end
     else if oiseau.y >= HAUTEUR_ECRAN then
     begin
       oiseau.y := HAUTEUR_ECRAN;
@@ -223,7 +227,7 @@ begin
   clrscr;
   oiseau.x := 10;
   oiseau.y := HAUTEUR_ECRAN div 2;
-  oiseau.vie := 3;
+  oiseau.vie := 1;
   oiseau.vy := 0;
   InitObjet;
   tickCounter := 0;
@@ -286,6 +290,7 @@ begin
       if ch = #0 then ch := ReadKey;
     until (ch = 'r') or (ch = 'R') or (ch = #13);
   until ch = #13;
+  writeln('session best: ', sessionBest);
   if sessionBest > score then
     score := sessionBest;
   delay(500);

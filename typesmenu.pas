@@ -3,7 +3,7 @@ unit typesmenu;
 interface
 
     const
-        MAX_JEUX_SOLO = 2;    
+        MAX_JEUX_SOLO = 3;    
         MAX_JEUX_MULTI = 2;   
         MAX_SCORES = MAX_JEUX_SOLO + MAX_JEUX_MULTI;  
     Type TListeJeux=record

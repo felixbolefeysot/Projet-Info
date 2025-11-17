@@ -7,8 +7,8 @@ interface
 
 uses crt, sysutils, typesmenu;
 
-procedure Frogger(var score : Integer);
-procedure modifscorefrogger(score : Integer; var liste: TListeProfils; j: Integer);
+procedure Frogger(var score : SmallInt);
+procedure modifscorefrogger(score : SmallInt; var liste: TListeProfils; j: Integer);
 
 implementation
 
@@ -259,7 +259,7 @@ begin
 end;
 
 
-procedure MettreAJourScore(var score: Integer);
+procedure MettreAJourScore(var score: SmallInt);
 begin
   if grenouille.y < hauteurPrecedente then
   begin
@@ -340,7 +340,7 @@ end;
 end;
 
 // ----------------------- Programme principal -----------------------
-procedure Frogger(var score : Integer);
+procedure Frogger(var score : SmallInt);
 begin
   { Initialisation CRT pour compatibilité Windows/Linux }
   TextBackground(Black);
@@ -428,7 +428,7 @@ begin
   clrscr;
 end;
 
-procedure modifscorefrogger(score : Integer; var liste: TListeProfils; j: Integer);
+procedure modifscorefrogger(score : SmallInt; var liste: TListeProfils; j: Integer);
 var
   scoreIndex: Integer;
 begin

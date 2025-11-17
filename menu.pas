@@ -4,7 +4,7 @@ unit menu;
 
 interface
 
-uses Typesmenu, crt, SysUtils, puissance4, casino, frogger, morpion;
+uses Typesmenu, crt, SysUtils, puissance4, casino, frogger, morpion, flappybird;
 
 var choixj : Integer;
 	listej : TListeJeux;
@@ -75,7 +75,7 @@ end;
 
 procedure lancerJeu(j1,j2,choixj : Integer; var ListeProfils : TListeProfils);
 var
-    score: Integer;  
+	score: SmallInt;  
 begin
     case choixj of
         1: begin
@@ -83,7 +83,7 @@ begin
             scorecasino(ListeProfils, j1);
             sauvegarderProfils(ListeProfils); 	
         end;
-        3: begin
+        MAX_JEUX_SOLO + 1: begin
             puissance4.puissance4;
             scorepuissance4(ListeProfils, j1, j2);
             sauvegarderProfils(ListeProfils); 
@@ -93,10 +93,15 @@ begin
             modifscorefrogger(score, ListeProfils, j1);
             sauvegarderProfils(ListeProfils); 
         end;
-		4: begin
+		MAX_JEUX_SOLO + 2: begin
 			morpion.morpion(ListeProfils, j1, j2);
 			morpion.scoremorpion(ListeProfils, j1, j2);
 			sauvegarderProfils(ListeProfils); 
+		end;
+		3: begin
+			flappybird.jouerflappy(score);
+			flappybird.scoreflappy(j1, score, ListeProfils);
+		    sauvegarderProfils(ListeProfils);
 		end;
     end;
 end;
@@ -126,7 +131,7 @@ var i,j, score, scoreIndex : Integer;
 begin
     initNomJeux(listej);
     writeln('Affichage des records :');
-    for i:=low(listej.jeu1) to high(listej.jeu1) do
+    for i:= low(listej.jeu1) to high(listej.jeu1) do
     begin
         score := -1;
         nomrecord := '';
@@ -142,7 +147,7 @@ begin
         else
             writeln(listej.jeu1[i],' : Aucun record');
     end;
-    for i:=low(listej.jeu2) to high(listej.jeu2) do
+    for i:= low(listej.jeu2) to high(listej.jeu2) do
     begin
         score := -1;
         nomrecord := '';
@@ -283,6 +288,7 @@ procedure initNomJeux(var listej : TListeJeux);
 begin
 	listej.jeu1[1] := 'Casino';
 	listej.jeu1[2] := 'Frogger';
+	listej.jeu1[3] := 'Flappy Bird';
 	listej.jeu2[1] := 'Puissance 4';
 	listej.jeu2[2] := 'Morpion';
 end;

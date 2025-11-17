@@ -28,7 +28,7 @@ Type TObjet = record
   
 Type TOiseau = record
     x, y: integer;
-  vie: integer;
+  dead: boolean;
   vy: integer; 
   end;
   
@@ -151,7 +151,7 @@ begin
     end
     else if k = #13 then
     begin
-      oiseau.vie := 0;
+      oiseau.dead := True;
     end;
   end;
   if (GRAVITY_TICKS <= 1) or (tickCounter mod GRAVITY_TICKS = 0) then
@@ -168,10 +168,18 @@ begin
     else if oiseau.y >= HAUTEUR_ECRAN then
     begin
       oiseau.y := HAUTEUR_ECRAN;
-      oiseau.vie := 0;
+      oiseau.dead := True;
     end;
     AfficherOiseau;
   end;
+end;
+
+procedure explosion(x, y: Integer);
+begin
+  GotoXY(x, y);
+  TextColor(Red);
+  Write('*');
+  TextColor(White);
 end;
 
 procedure Collision;
@@ -184,26 +192,13 @@ begin
        (objet[i].y <= oiseau.y + 1) and (objet[i].y + 1 >= oiseau.y) then
     begin
       EffacerOiseau(oiseau.x, oiseau.y);
-      oiseau.vie := oiseau.vie - 1;
-      if oiseau.vie <= 0 then
-      begin
-        oiseau.vie := 0;
-        AfficherOiseau;
-        exit;
-      end
-      else
-        AfficherOiseau;
+      explosion(oiseau.x, oiseau.y);
+      oiseau.dead := True;
+      exit;
     end;
   end;
 end;
 
-procedure explosion(x, y: Integer);
-begin
-  GotoXY(x, y);
-  TextColor(Red);
-  Write('*');
-  TextColor(White);
-end;
 
 procedure EffacerObjets;
 var
@@ -227,7 +222,7 @@ begin
   clrscr;
   oiseau.x := 10;
   oiseau.y := HAUTEUR_ECRAN div 2;
-  oiseau.vie := 1;
+  oiseau.dead := False;
   oiseau.vy := 0;
   InitObjet;
   tickCounter := 0;
@@ -270,7 +265,7 @@ begin
       MettreAJourJeu;
       MettreAJourScore(runScore);
       Delay(FRAME_DELAY);
-    until oiseau.vie <= 0;
+    until oiseau.dead;
     if runScore > sessionBest then
       sessionBest := runScore;
 
@@ -290,6 +285,7 @@ begin
       if ch = #0 then ch := ReadKey;
     until (ch = 'r') or (ch = 'R') or (ch = #13);
   until ch = #13;
+  clrscr;
   writeln('session best: ', sessionBest);
   if sessionBest > score then
     score := sessionBest;

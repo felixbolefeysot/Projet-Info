@@ -14,6 +14,9 @@ Const
   LARGEUR_ECRAN = 80;
   HAUTEUR_ECRAN = 25;
   NB_OBJETS = 15;
+  FRAME_DELAY = 140; 
+  GRAVITY_TICKS = 2; 
+  OBJECT_MOVE_TICKS = 2; 
 
 Type TObjet = record
     x, y: integer;
@@ -30,6 +33,7 @@ Type TOiseau = record
 var
   oiseau : TOiseau;
   objet: array[1..NB_OBJETS] of TObjet; 
+  tickCounter: Integer = 0; 
 
 procedure InitObjet;
 var 
@@ -101,14 +105,16 @@ procedure DeplacerObjets;
 var
   i: Integer;
 begin
-  for i := 1 to NB_OBJETS do
+  if (OBJECT_MOVE_TICKS <= 1) or (tickCounter mod OBJECT_MOVE_TICKS = 0) then
   begin
-    objet[i].x := objet[i].x - objet[i].vitesse;
+    for i := 1 to NB_OBJETS do
+    begin
+      objet[i].x := objet[i].x - objet[i].vitesse;
     if objet[i].x < 1 then
     begin
       objet[i].x := LARGEUR_ECRAN;
       objet[i].y := Random(HAUTEUR_ECRAN - 4) + 4;
-      objet[i].vitesse := Random(4) + 1;
+        objet[i].vitesse := Random(3) + 1;
 
       case objet[i].vitesse of
         1: objet[i].taille := 1; 
@@ -123,6 +129,7 @@ begin
         3: objet[i].symbole := '~';  
         4: objet[i].symbole := '&';  
       end;
+    end;
     end;
   end;
 end;
@@ -153,16 +160,19 @@ begin
       oiseau.vie := 0;
     end;
   end;
-  if oiseau.y < HAUTEUR_ECRAN then
+  if (GRAVITY_TICKS <= 1) or (tickCounter mod GRAVITY_TICKS = 0) then
   begin
-    EffacerOiseau(oiseau.x, oiseau.y);
-    oiseau.y := oiseau.y + 1;
-    AfficherOiseau;
-  end
-  else
-  begin
-    oiseau.y := HAUTEUR_ECRAN;
-    oiseau.vie := 0;
+    if oiseau.y < HAUTEUR_ECRAN then
+    begin
+      EffacerOiseau(oiseau.x, oiseau.y);
+      oiseau.y := oiseau.y + 1;
+      AfficherOiseau;
+    end
+    else
+    begin
+      oiseau.y := HAUTEUR_ECRAN;
+      oiseau.vie := 0;
+    end;
   end;
 end;
 
@@ -221,12 +231,14 @@ begin
   oiseau.y := HAUTEUR_ECRAN div 2;
   oiseau.vie := 3;
   InitObjet;
+  tickCounter := 0;
   AfficherOiseau;
   AfficherObjets;
 end;
 
 procedure MettreAJourJeu;
 begin
+  tickCounter := tickCounter + 1;
   EffacerObjets;
   DeplacerObjets;
   AfficherObjets;
@@ -243,28 +255,50 @@ begin
 end;
 
 procedure jouerflappy(var score: SmallInt);
+var
+  runScore: SmallInt;
+  sessionBest: SmallInt;
+  ch: char;
 begin
-  score := 0;
-  InitialiserJeu;
-  GotoXY(1, 1);
-  Write('Score: ', score);
-  GotoXY(oiseau.x, oiseau.y); 
+  sessionBest := score;
   repeat
-    MettreAJourJeu;
-    MettreAJourScore(score);
-    Delay(100);
-  until oiseau.vie <= 0;
-  GotoXY(LARGEUR_ECRAN div 2 - 5, HAUTEUR_ECRAN div 2);
-  TextColor(Red);
-  Write('Game Over');
-  TextColor(White);
-  ReadLn;
-end;
+    runScore := 0;
+    InitialiserJeu;
+    GotoXY(1, 1);
+    Write('Score: ', runScore);
+    GotoXY(oiseau.x, oiseau.y);
+    repeat
+      MettreAJourJeu;
+      MettreAJourScore(runScore);
+      Delay(FRAME_DELAY);
+    until oiseau.vie <= 0;
+    if runScore > sessionBest then
+      sessionBest := runScore;
 
+    GotoXY(LARGEUR_ECRAN div 2 - 10, HAUTEUR_ECRAN div 2);
+    TextColor(Red);
+    Write('Game Over');
+    GotoXY(LARGEUR_ECRAN div 2 - 16, HAUTEUR_ECRAN div 2 + 1);
+    if runScore = sessionBest then
+      Write('New session best: ', sessionBest)
+    else
+      Write('Session best: ', sessionBest);
+    TextColor(White);
+    GotoXY(LARGEUR_ECRAN div 2 - 18, HAUTEUR_ECRAN div 2 + 3);
+    Write('Press R to replay, Enter to quit');
+    repeat
+      ch := ReadKey;
+      if ch = #0 then ch := ReadKey;
+    until (ch = 'r') or (ch = 'R') or (ch = #13);
+  until ch = #13;
+  if sessionBest > score then
+    score := sessionBest;
+end;
+ 
 procedure scoreflappy(j1, score: Integer; var liste : TListeProfils);
 begin
   if score > liste.profils[j1].scores[3] then
-    liste.profils[j1].scores[3]:=score;
+    liste.profils[j1].scores[3] := score;
 end;
 
 end.

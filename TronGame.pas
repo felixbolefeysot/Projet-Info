@@ -99,7 +99,7 @@ begin
   write('J1: ', joueur1.vie, '   J2: ', joueur2.vie, '     ');
 end;
 
-procedure Deplacement(var j: TJoueur; var oldx, oldy: integer);
+procedure Deplacement(var j: TJoueur; var xprecedent, yprecedent: integer);
 begin
   xprecedent := j.x;
   yprecedent := j.y;

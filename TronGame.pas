@@ -101,8 +101,8 @@ end;
 
 procedure Deplacement(var j: TJoueur; var oldx, oldy: integer);
 begin
-  oldx := j.x;
-  oldy := j.y;
+  xprecedent := j.x;
+  yprecedent := j.y;
 
   case j.dir of
     Haut: dec(j.y);
@@ -113,20 +113,20 @@ begin
 end;
 
 
-procedure Trace(var j: TJoueur; oldx, oldy: integer);
+procedure Trace(var j: TJoueur; xprecedent, yprecedent: integer);
 var horiz: boolean;
 begin
-  if (oldx < 2) or (oldx > LARGEUR_ECRAN - 1) or
-     (oldy < 2) or (oldy > HAUTEUR_ECRAN - 1) then Exit;
+  if (xprecedent < 2) or (xprecedent > LARGEUR_ECRAN - 1) or
+     (yprecedent < 2) or (yprecedent > HAUTEUR_ECRAN - 1) then Exit;
 
-  grille[oldx, oldy] := True;
+  grille[xprecedent, yprecedent] := True;
 
   if j.symbole = '1' then TextColor(LightBlue)
   else TextColor(Yellow);
 
-  horiz := (oldy = j.y) and (oldx <> j.x);
+  horiz := (yprecedent = j.y) and (xprecedent <> j.x);
 
-  gotoxy(oldx, oldy);
+  gotoxy(xprecedent,yprecedent);
   if horiz then write('-') else write('|');
 end;
 
@@ -171,7 +171,7 @@ end;
 
 procedure JouerTron;
 var
-  oldx1, oldy1, oldx2, oldy2: integer;
+  xprecedent1, yprecedent1, xprecedent2, yprecedent2: integer;
 begin
   joueur1.vie := 10;
   joueur2.vie := 10;
@@ -187,16 +187,16 @@ begin
     begin
       GererTouches;
 
-      Deplacement(joueur1, oldx1, oldy1);
-      Deplacement(joueur2, oldx2, oldy2);
+      Deplacement(joueur1, xprecedent1, yprecedent1);
+      Deplacement(joueur2, xprecedent2, yprecedent2);
 
       VerifierCollision(joueur1);
       VerifierCollision(joueur2);
 
       if not jeuActif then Break;
 
-      Trace(joueur1, oldx1, oldy1);
-      Trace(joueur2, oldx2, oldy2);
+      Trace(joueur1, xprecedent1, yprecedent1);
+      Trace(joueur2, xprecedent2, yprecedent2);
 
       AfficherJoueur(joueur1);
       AfficherJoueur(joueur2);

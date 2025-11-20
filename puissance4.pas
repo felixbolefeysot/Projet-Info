@@ -5,7 +5,7 @@ interface
 uses TADGrille, Typesmenu, crt;
 
 procedure puissance4;
-procedure scorepuissance4(var liste: TListeProfils; profileJ1, profileJ2: Integer);
+procedure scorepuissance4(var liste: TListeProfils; profilJ1, profilJ2: Integer);
 var
     dernierGagnant: Integer; 
 
@@ -40,15 +40,15 @@ begin
     readln;
 end;
 
-procedure scorepuissance4(var liste: TListeProfils; profileJ1, profileJ2: Integer);
+procedure scorepuissance4(var liste: TListeProfils; profilJ1, profilJ2: Integer);
 var
   scoreIndex: Integer;
 begin
   scoreIndex := MAX_JEUX_SOLO + 1;
   if dernierGagnant = 1 then
-    liste.profils[profileJ1].scores[scoreIndex] := liste.profils[profileJ1].scores[scoreIndex] + 1;
+    liste.profils[profilJ1].scores[scoreIndex] := liste.profils[profilJ1].scores[scoreIndex] + 1;
   if dernierGagnant = 2 then
-    liste.profils[profileJ2].scores[scoreIndex] := liste.profils[profileJ2].scores[scoreIndex] + 1;
+    liste.profils[profilJ2].scores[scoreIndex] := liste.profils[profilJ2].scores[scoreIndex] + 1;
 end;
 
 end.

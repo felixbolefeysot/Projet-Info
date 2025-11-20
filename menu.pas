@@ -4,15 +4,15 @@ unit menu;
 
 interface
 
-uses Typesmenu, crt, SysUtils, puissance4, casino, frogger, morpion, flappybird;
+uses Typesmenu, crt, SysUtils, puissance4, casino, frogger, morpion, flappybird, TronGame;
 
 var choixj : Integer;
 	listej : TListeJeux;
 
 procedure choix(var choix : Integer);
 procedure menu(choix : integer; var ListeProfils: TListeProfils);
-procedure lancerJeu(j1,j2,choixj : Integer; var ListeProfils : TListeProfils);
 procedure Choixjeu(nbJ : Integer; var choixj : Integer);
+procedure lancerJeu(j1,j2,choixj : Integer; var ListeProfils : TListeProfils);
 procedure UnJoueur(var ListeProfils : TListeProfils);
 procedure DeuxJoueurs(var ListeProfils : TListeProfils);
 procedure Parametres(var ListeProfils : TListeProfils);
@@ -102,6 +102,11 @@ begin
 			flappybird.jouerflappy(score);
 			flappybird.scoreflappy(j1, score, ListeProfils);
 		    sauvegarderProfils(ListeProfils);
+		end;
+		MAX_JEUX_SOLO + 3: begin
+			TronGame.JouerTron;
+			TronGame.scoretron(dernierGagnant, j1, j2, ListeProfils);
+			sauvegarderProfils(ListeProfils);
 		end;
     end;
 end;
@@ -292,6 +297,7 @@ begin
 	listej.jeu1[3] := 'Flappy Bird';
 	listej.jeu2[1] := 'Puissance 4';
 	listej.jeu2[2] := 'Morpion';
+	listej.jeu2[3] := 'Tron';
 end;
 
 procedure choixJoueur(p : Integer; var j: Integer; var ListeProfils : TListeProfils);

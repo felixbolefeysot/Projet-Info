@@ -1,9 +1,11 @@
 unit TronGame;
 
 interface
-uses crt, sysutils;
+uses crt, sysutils, Typesmenu;
 
 procedure JouerTron;
+procedure scoretron(dernierGagnant,j1,j2: Integer; var liste : TListeProfils);
+var dernierGagnant: Integer;
 
 implementation
 
@@ -169,12 +171,21 @@ begin
   end;
 end;
 
+procedure scoretron(dernierGagnant,j1,j2: Integer; var liste : TListeProfils);
+begin
+  if dernierGagnant = 2 then
+    liste.profils[j2].scores[MAX_JEUX_SOLO + 3] := liste.profils[j2].scores[MAX_JEUX_SOLO + 3] + 1
+  else if dernierGagnant = 1 then
+    liste.profils[j1].scores[MAX_JEUX_SOLO + 3] := liste.profils[j1].scores[MAX_JEUX_SOLO + 3] + 1;
+end;
+
 procedure JouerTron;
 var
   xprecedent1, yprecedent1, xprecedent2, yprecedent2: integer;
 begin
   joueur1.vie := 10;
   joueur2.vie := 10;
+  dernierGagnant := 0;
 
   repeat
     InitialiserJeu;
@@ -215,6 +226,10 @@ begin
 
   clrscr;
   TextColor(White);
+  if joueur1.vie = 0 then
+    dernierGagnant:= 2
+  else
+    dernierGagnant:= 1;
 
   if joueur1.vie = 0 then
     writeln('🏁 Le joueur 2 a gagné !')

@@ -238,6 +238,7 @@ begin
 
   writeln('Appuie sur une touche pour quitter...');
   readkey;
+  clrscr;
 end;
 
 end.

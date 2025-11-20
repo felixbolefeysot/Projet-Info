@@ -105,7 +105,7 @@ begin
 		end;
 		MAX_JEUX_SOLO + 3: begin
 			TronGame.JouerTron;
-			TronGame.scoretron(dernierGagnant, j1, j2, ListeProfils);
+			TronGame.scoretron(TronGame.dernierGagnant, j1, j2, ListeProfils);
 			sauvegarderProfils(ListeProfils);
 		end;
     end;

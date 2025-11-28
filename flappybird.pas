@@ -15,8 +15,8 @@ Const
   HAUTEUR_ECRAN = 25;
   NB_OBJETS = 9; 
   FRAME_DELAY = 100; 
-  GRAVITY_TICKS = 2; 
-  OBJECT_MOVE_TICKS = 1;
+  GRAVITY_MOD = 2; 
+  OBJET_MOVE_MOD = 1;
   MIN_OISEAU_Y = 4; 
 
 Type TObjet = record
@@ -24,23 +24,23 @@ Type TObjet = record
     vitesse: integer;
     symbole: string;
     taille: Integer;
-  prevX: Integer;
-  prevY: Integer;
-  prevTaille: Integer;
+  oldX: Integer;
+  oldY: Integer;
+  oldTaille: Integer;
   end;
   
 Type TOiseau = record
     x, y: integer;
   dead: boolean;
   vy: integer;
-  prevX: Integer;
-  prevY: Integer;
+  oldX: Integer;
+  oldY: Integer;
   end;
   
 var
   oiseau : TOiseau;
   objet: array[1..NB_OBJETS] of TObjet; 
-  tickCounter: Integer = 0; 
+  modCounter: Integer = 0; 
 
 procedure InitObjet;
 var 
@@ -52,9 +52,9 @@ begin
     objet[i].x := LARGEUR_ECRAN + Random(40);
     objet[i].y := Random(HAUTEUR_ECRAN - 4) + 4;
     objet[i].vitesse := Random(2) + 1;
-    objet[i].prevX := objet[i].x;
-    objet[i].prevY := objet[i].y;
-    objet[i].prevTaille := 1;
+    objet[i].oldX := objet[i].x;
+    objet[i].oldY := objet[i].y;
+    objet[i].oldTaille := 1;
 
     case objet[i].vitesse of
       1: objet[i].taille := 1; 
@@ -69,7 +69,7 @@ begin
       3: objet[i].symbole := '~';  
       4: objet[i].symbole := '&';  
     end;
-    objet[i].prevTaille := objet[i].taille;
+    objet[i].oldTaille := objet[i].taille;
   end;
 end;  
 
@@ -88,9 +88,9 @@ begin
         Write(objet[i].symbole);
       end;
     end;
-    objet[i].prevX := objet[i].x;
-    objet[i].prevY := objet[i].y;
-    objet[i].prevTaille := objet[i].taille;
+    objet[i].oldX := objet[i].x;
+    objet[i].oldY := objet[i].y;
+    objet[i].oldTaille := objet[i].taille;
   end;
   TextColor(White);
 end;
@@ -103,8 +103,8 @@ begin
     TextColor(Yellow);
     Write('O');
     TextColor(White);
-    oiseau.prevX := oiseau.x;
-    oiseau.prevY := oiseau.y;
+    oiseau.oldX := oiseau.x;
+    oiseau.oldY := oiseau.y;
   end;
 end;
 
@@ -121,7 +121,7 @@ procedure DeplacerObjets;
 var
   i: Integer;
 begin
-  if (OBJECT_MOVE_TICKS <= 1) or (tickCounter mod OBJECT_MOVE_TICKS = 0) then
+  if (OBJET_MOVE_MOD <= 1) or (modCounter mod OBJET_MOVE_MOD = 0) then
   begin
     for i := 1 to NB_OBJETS do
     begin
@@ -168,10 +168,10 @@ begin
       oiseau.dead := True;
     end;
   end;
-  if (GRAVITY_TICKS <= 1) or (tickCounter mod GRAVITY_TICKS = 0) then
+  if (GRAVITY_MOD <= 1) or (modCounter mod GRAVITY_MOD = 0) then
     oiseau.vy := oiseau.vy + 1;
-  if (oiseau.prevX >= 1) and (oiseau.prevY >= 1) then
-    EffacerOiseau(oiseau.prevX, oiseau.prevY);
+  if (oiseau.oldX >= 1) and (oiseau.oldY >= 1) then
+    EffacerOiseau(oiseau.oldX, oiseau.oldY);
 
   oiseau.y := oiseau.y + oiseau.vy;
     if oiseau.y < MIN_OISEAU_Y then
@@ -219,11 +219,11 @@ var
 begin
   for i := 1 to NB_OBJETS do
   begin
-    for j := 0 to objet[i].prevTaille - 1 do
+    for j := 0 to objet[i].oldTaille - 1 do
     begin
-      if (objet[i].prevX + j >= 1) and (objet[i].prevX + j <= LARGEUR_ECRAN) and (objet[i].prevY >= 1) and (objet[i].prevY <= HAUTEUR_ECRAN) then
+      if (objet[i].oldX + j >= 1) and (objet[i].oldX + j <= LARGEUR_ECRAN) and (objet[i].oldY >= 1) and (objet[i].oldY <= HAUTEUR_ECRAN) then
       begin
-        GotoXY(objet[i].prevX + j, objet[i].prevY);
+        GotoXY(objet[i].oldX + j, objet[i].oldY);
         Write(' ');
       end;
     end;
@@ -238,14 +238,14 @@ begin
   oiseau.dead := False;
   oiseau.vy := 0;
   InitObjet;
-  tickCounter := 0;
+  modCounter := 0;
   AfficherOiseau;
   AfficherObjets;
 end;
 
 procedure MettreAJourJeu;
 begin
-  tickCounter := tickCounter + 1;
+  modCounter := modCounter + 1;
   EffacerObjets;
   DeplacerObjets;
   AfficherObjets;

@@ -2,7 +2,7 @@ unit casino;
 
 interface 
 
-uses programmeroulette, Typesmenu;
+uses programmeroulette, Typesmenu, crt;
 
 var capital : Integer;
 
@@ -15,6 +15,7 @@ var
   ch, m, d, l, co, num, gain: integer;
   c, ip, rejouer: char;
 begin
+  ClrScr;
   capital := 70; 
   randomize;
   writeln('----------------------------------------');
@@ -28,7 +29,7 @@ begin
       writeln(' Vous n''avez plus d''argent... Le jeu est termine.');
       break;
     end;
-
+	ClrScr;
     afficherCapital(capital);
     choix(ch);
     mise(ch, m, d, l, co, c, ip);

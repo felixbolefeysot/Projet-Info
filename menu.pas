@@ -109,6 +109,7 @@ begin
 			sauvegarderProfils(ListeProfils);
 		end;
     end;
+    ClrScr;
 end;
 	
 procedure UnJoueur(var ListeProfils : TListeProfils);

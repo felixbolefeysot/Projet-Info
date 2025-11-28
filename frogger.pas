@@ -167,8 +167,7 @@ begin
   if KeyPressed then
   begin
     key := ReadKey;
-    { Gestion portable des touches fléchées }
-    if key = #0 then  { Windows: touches étendues }
+    if key = #0 then 
     begin
       key := ReadKey;
       case key of
@@ -178,7 +177,7 @@ begin
         DOWN  : if grenouille.y < HAUTEUR_ECRAN then grenouille.y := grenouille.y + 1;
       end;
     end
-    else if key = #224 then  { Alternative sur certains systèmes }
+    else if key = #224 then 
     begin
       key := ReadKey;
       case key of
@@ -342,7 +341,6 @@ end;
 // ----------------------- Programme principal -----------------------
 procedure Frogger(var score : SmallInt);
 begin
-  { Initialisation CRT pour compatibilité Windows/Linux }
   TextBackground(Black);
   TextColor(White);
   clrscr;
@@ -374,19 +372,18 @@ begin
   AfficherZoneVictoire;
 
   repeat
-    { Ne PAS effacer tout l'écran - optimisation ! }
     DeplacerVoitures;
     AfficherVoitures;
     DeplacementGrenouille;
     AfficherGrenouille;
     ToucheVoiture;
     MettreAJourScore(score);
-    AfficherScore(score);  { Passer le score en paramètre }
+    AfficherScore(score); 
 
     if Victoire then
     begin
       NouveauNiveau;
-      AfficherZoneVictoire;  { Réafficher la zone après clrscr du nouveau niveau }
+      AfficherZoneVictoire;  
     end;
 
     Delay(80);

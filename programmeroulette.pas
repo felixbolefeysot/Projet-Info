@@ -1,155 +1,151 @@
-unit programmeroulette;
+unit roulette;
 
 interface
 
-procedure choix(var choix: integer);
-procedure mise(choix : integer; var mise, douzaine, ligne, colonne: integer; var c, ip : char);
-procedure afficherCapital(capital: integer);
-function verifgain(choix, num, mise, douzaine, ligne, colonne: integer; c, ip : char) : integer;
-function tirage : integer;
-function couleur(num : integer) : char;
+procedure demanderChoix(var choix: integer);
+procedure demanderMise(choix: integer; var montant, douzaine, ligne, colonne: integer; var couleurChoisie, pairImpair: char);
+procedure afficherArgent(argent: integer);
+function calculerGain(choix, numero, montant, douzaine, ligne, colonne: integer; couleurChoisie, pairImpair: char): integer;
+function tirage: integer;
+function couleurDuNumero(numero: integer): char;
 
 implementation
 
-uses sysutils, crt, typesmenu;
+uses crt, sysutils;
 
-
-procedure choix(var choix: integer);
+procedure demanderChoix(var choix: integer);
 begin
-   writeln('Sur quoi voulez-vous miser ?');
-   writeln('Tapez 1 pour miser sur le rouge ou le noir');
-   writeln('Tapez 2 pour miser sur une douzaine');
-   writeln('Tapez 3 pour miser sur pair ou impair');
-   writeln('Tapez 4 pour miser le zero');
-   writeln('Tapez 5 pour miser sur une ligne');
-   writeln('Tapez 6 pour miser sur une colonne');
-   
+   writeln('Que voulez-vous miser ?');
+   writeln('1 - Rouge / Noir');
+   writeln('2 - Douzaine');
+   writeln('3 - Pair / Impair');
+   writeln('4 - Zéro');
+   writeln('5 - Ligne (1 à 3)');
+   writeln('6 - Colonne (1 à 3)');
+
    repeat
       readln(choix);
    until (choix >= 1) and (choix <= 6);
 end;
 
-procedure mise(choix : integer; var mise, douzaine, ligne, colonne: integer; var c, ip : char);
+
+procedure demanderMise(choix: integer; var montant, douzaine, ligne, colonne: integer; var couleurChoisie, pairImpair: char);
 begin
    case choix of
-      1: begin
-            writeln('Noir ou rouge ?');
-            writeln('Tapez n pour miser sur le noir');
-            writeln('Tapez r pour miser sur le rouge');
-            repeat
-               readln(c);
-            until (c = 'n') or (c = 'r');
-            writeln('Combien voulez-vous miser ?');
-            readln(mise);
-         end;
-      2: begin
-            writeln('Quelle douzaine ? (1=1-12, 2=13-24, 3=25-36)');
-            repeat
-               readln(douzaine);
-            until (douzaine >= 1) and (douzaine <= 3);
-            writeln('Combien voulez-vous miser ?');
-            readln(mise);
-         end;
-      3: begin
-            writeln('Pair ou impair ?');
-            writeln('Tapez p pour miser sur le pair');
-            writeln('Tapez i pour miser sur l''impair');
-            repeat
-               readln(ip);
-            until (ip = 'p') or (ip = 'i');
-            writeln('Combien voulez-vous miser ?');
-            readln(mise);
-         end;
-      4: begin
-            writeln('Combien voulez-vous miser sur le zero ?');
-            readln(mise);
-         end;
-      5: begin
-            writeln('Quelle ligne ? (1, 2 ou 3)');
-            repeat
-               readln(ligne);
-            until (ligne >= 1) and (ligne <= 3);
-            writeln('Combien voulez-vous miser ?');
-            readln(mise);
-         end;
-      6: begin
-            writeln('Quelle colonne ? (1, 2 ou 3)');
-            repeat
-               readln(colonne);
-            until (colonne >= 1) and (colonne <= 3);
-            writeln('Combien voulez-vous miser ?');
-            readln(mise);
-         end;
+      1:
+      begin
+         writeln('Rouge (r) ou noir (n) ?');
+         repeat readln(couleurChoisie); until (couleurChoisie='r') or (couleurChoisie='n');
+         writeln('Montant de la mise :');
+         readln(montant);
+      end;
+
+      2:
+      begin
+         writeln('Choisissez la douzaine (1 : 1-12 | 2 : 13-24 | 3 : 25-36) :');
+         repeat readln(douzaine); until (douzaine>=1) and (douzaine<=3);
+         writeln('Montant de la mise :');
+         readln(montant);
+      end;
+
+      3:
+      begin
+         writeln('Pair (p) ou impair (i) ?');
+         repeat readln(pairImpair); until (pairImpair='p') or (pairImpair='i');
+         writeln('Montant de la mise :');
+         readln(montant);
+      end;
+
+      4:
+      begin
+         writeln('Mise sur le zéro : montant ?');
+         readln(montant);
+      end;
+
+      5:
+      begin
+         writeln('Ligne (1, 2, 3) :');
+         repeat readln(ligne); until (ligne>=1) and (ligne<=3);
+         writeln('Montant :');
+         readln(montant);
+      end;
+
+      6:
+      begin
+         writeln('Colonne (1, 2, 3) :');
+         repeat readln(colonne); until (colonne>=1) and (colonne<=3);
+         writeln('Montant :');
+         readln(montant);
+      end;
    end;
 end;
 
-function tirage : integer;
+
+function tirage: integer;
 begin
    randomize;
-   tirage := random(37); { 0 à 36 }
+   tirage := random(37);
 end;
 
-function couleur(num : integer) : char;
+
+function couleurDuNumero(numero: integer): char;
 const
-   rouges : array[1..18] of integer = (1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36);
-var
-   i : integer;
+   rouges : array[1..18] of integer =
+     (1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36);
+var i: integer;
 begin
-   if num = 0 then
-      couleur := 'v'
-   else
-   begin
-      couleur := 'n';
-      for i := 1 to 18 do
-         if num = rouges[i] then couleur := 'r';
-   end;
+   if numero = 0 then exit('v'); // vert
+   couleurDuNumero := 'n';
+   for i := 1 to 18 do
+      if numero = rouges[i] then couleurDuNumero := 'r';
 end;
 
-function verifgain(choix, num, mise, douzaine, ligne, colonne: integer; c, ip : char) : integer;
+
+function calculerGain(choix, numero, montant, douzaine, ligne, colonne: integer; couleurChoisie, pairImpair: char): integer;
 var
-   gain : integer;
-   col_tirage, ligne_tirage, douzaine_tirage : integer;
-   colcolor : char;
+   douzaineTirage, ligneTirage, colonneTirage: integer;
+   coul: char;
 begin
-   gain := 0;
-   colcolor := couleur(num);
+   coul := couleurDuNumero(numero);
+   calculerGain := 0;
 
-   if (num >= 1) and (num <= 12) then douzaine_tirage := 1
-   else if (num >= 13) and (num <= 24) then douzaine_tirage := 2
-   else if (num >= 25) and (num <= 36) then douzaine_tirage := 3
-   else douzaine_tirage := 0;
+   // Détermination des zones du tirage
+   if (numero>=1) and (numero<=12) then douzaineTirage := 1
+   else if (numero<=24) then douzaineTirage := 2
+   else if (numero<=36) then douzaineTirage := 3
+   else douzaineTirage := 0;
 
-   if num = 0 then
+   if numero = 0 then
    begin
-      ligne_tirage := 0;
-      col_tirage := 0;
+      ligneTirage := 0;
+      colonneTirage := 0;
    end
    else
    begin
-      col_tirage := ((num - 1) mod 3) + 1;
-      ligne_tirage := ((num - 1) div 3) mod 3 + 1;
+      colonneTirage := ((numero-1) mod 3) + 1;
+      ligneTirage   := ((numero-1) div 3) mod 3 + 1;
    end;
 
+   // Calcul du gain
    case choix of
-      1: if (c = colcolor) then gain := mise * 2;
-      2: if (douzaine = douzaine_tirage) then gain := mise * 3;
-      3: if (num <> 0) and (((ip = 'p') and (num mod 2 = 0)) or ((ip = 'i') and (num mod 2 = 1))) then
-            gain := mise * 2;
-      4: if (num = 0) then gain := mise * 36;
-      5: if (ligne = ligne_tirage) then gain := mise * 3;
-      6: if (colonne = col_tirage) then gain := mise * 3;
+      1: if couleurChoisie = coul then calculerGain := montant * 2;
+      2: if douzaine = douzaineTirage then calculerGain := montant * 3;
+      3: if (numero<>0) and (((pairImpair='p') and (numero mod 2=0)) or
+                             ((pairImpair='i') and (numero mod 2=1))) then
+            calculerGain := montant * 2;
+      4: if numero=0 then calculerGain := montant * 36;
+      5: if ligne = ligneTirage then calculerGain := montant * 3;
+      6: if colonne = colonneTirage then calculerGain := montant * 3;
    end;
-
-   verifgain := gain;
 end;
 
 
-procedure afficherCapital(capital: integer);
+procedure afficherArgent(argent: integer);
 begin
-  writeln('----------------------------------------');
-  writeln('Capital actuel : ', capital, ' unites');
-  writeln('----------------------------------------');
+   writeln('------------------------------');
+   writeln('Votre capital : ', argent);
+   writeln('------------------------------');
 end;
-
 
 end.
+

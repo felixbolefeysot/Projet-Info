@@ -268,6 +268,9 @@ var
   ch: char;
 begin
   sessionBest := score;
+  writeln('utilisez la flèche du haut pour sauter, appuyez sur une touche pour commencer...');
+  ReadKey;  
+  CursorOff;
   repeat
     runScore := 0;
     InitialiserJeu;
@@ -304,6 +307,7 @@ begin
     score := sessionBest;
   delay(1500);
   clrscr;
+  CursorOn;
 end;
  
 procedure scoreflappy(j1, score: Integer; var liste : TListeProfils);

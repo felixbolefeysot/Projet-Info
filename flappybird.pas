@@ -14,8 +14,8 @@ Const
   LARGEUR_ECRAN = 80;
   HAUTEUR_ECRAN = 25;
   NB_OBJETS = 9; 
-  FRAME_DELAY = 100; 
-  GRAVITY_MOD = 2; 
+  DELAI = 100; 
+  GRAVITE_MOD = 2; 
   OBJET_MOVE_MOD = 1;
   MIN_OISEAU_Y = 4; 
 
@@ -168,7 +168,7 @@ begin
       oiseau.dead := True;
     end;
   end;
-  if (GRAVITY_MOD <= 1) or (modCounter mod GRAVITY_MOD = 0) then
+  if (GRAVITE_MOD <= 1) or (modCounter mod GRAVITE_MOD = 0) then
     oiseau.vy := oiseau.vy + 1;
   if (oiseau.oldX >= 1) and (oiseau.oldY >= 1) then
     EffacerOiseau(oiseau.oldX, oiseau.oldY);
@@ -277,7 +277,7 @@ begin
     repeat
       MettreAJourJeu;
       MettreAJourScore(runScore);
-      Delay(FRAME_DELAY);
+      Delay(DELAI);
     until oiseau.dead;
     if runScore > sessionBest then
       sessionBest := runScore;

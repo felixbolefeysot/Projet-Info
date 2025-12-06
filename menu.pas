@@ -9,8 +9,8 @@ uses Typesmenu, crt, SysUtils, puissance4, casino, frogger, morpion, flappybird,
 var choixj : Integer;
 	listej : TListeJeux;
 
-procedure choix(var choix : Integer);
-procedure menu(choix : integer; var ListeProfils: TListeProfils);
+procedure choixmenu(var choix : Integer);
+procedure menu( var choix : integer; var ListeProfils: TListeProfils);
 procedure Choixjeu(nbJ : Integer; var choixj : Integer);
 procedure lancerJeu(j1,j2,choixj : Integer; var ListeProfils : TListeProfils);
 procedure UnJoueur(var ListeProfils : TListeProfils);
@@ -28,7 +28,7 @@ procedure choixJoueur(p : Integer; var j: Integer; var ListeProfils : TListeProf
 
 implementation
 
-procedure choix(var choix : Integer);
+procedure choixmenu(var choix : Integer);
 begin
 	repeat 
 		writeln('1-Records');
@@ -40,8 +40,9 @@ begin
 	until (choix<6) and (choix>0)
 end;
 
-procedure menu(choix : integer; var ListeProfils: TListeProfils);
+procedure menu( var choix : integer; var ListeProfils: TListeProfils);
 begin
+	choixmenu(choix);
 	case choix of
 	1: Records(listej,ListeProfils);
 	2: UnJoueur(ListeProfils);

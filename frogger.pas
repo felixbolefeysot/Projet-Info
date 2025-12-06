@@ -25,7 +25,7 @@ type
   TObjet = record
     x, y: integer;
     vitesse: integer;
-    direction: integer; // 1 = droite, -1 = gauche
+    direction: integer; 
     symbole: string;
     taille: Integer;
   end;
@@ -42,7 +42,7 @@ var
   hauteurPrecedente: integer;
   niveau: integer;
   nbVoituresActuel: integer;
-  oldGrenouilleX, oldGrenouilleY: integer;  { Position précédente pour effacement }
+  oldGrenouilleX, oldGrenouilleY: integer; 
 
   
 
@@ -88,13 +88,12 @@ var
 begin
   for i := 1 to nbVoituresActuel do
   begin
-    // Couleur selon le niveau (cycle sur 5 couleurs)
     case (niveau mod 5) of
-      1: TextColor(Blue);           { Bleu }
-      2: TextColor(LightRed);       { Rouge }
-      3: TextColor(Brown);          { Orange }
-      4: TextColor(Magenta);        { Violet }
-      0: TextColor(LightMagenta);   { Rose }
+      1: TextColor(Blue);           
+      2: TextColor(LightRed);       
+      3: TextColor(Brown);          
+      4: TextColor(Magenta);        
+      0: TextColor(LightMagenta);   
     end;
 
     for j := 0 to voitures[i].taille - 1 do
@@ -110,20 +109,17 @@ end;
 
 procedure AfficherGrenouille;
 begin
-  { Effacer ancienne position }
   if (oldGrenouilleX > 0) and (oldGrenouilleY > 0) then
   begin
     GotoXY(oldGrenouilleX, oldGrenouilleY);
     Write(' ');
   end;
   
-  { Afficher nouvelle position }
   GotoXY(grenouille.x, grenouille.y);
   TextColor(Green);
   Write('@');
   TextColor(White);
   
-  { Mémoriser position pour prochain effacement }
   oldGrenouilleX := grenouille.x;
   oldGrenouilleY := grenouille.y;
 end;
@@ -144,14 +140,12 @@ begin
   begin
     if Random(10) < voitures[i].vitesse then
     begin
-      {Effacer ancienne position}
       for j := 0 to voitures[i].taille - 1 do
       begin
         GotoXY(voitures[i].x + j, voitures[i].y);
         Write(' ');
       end;
 
-      {Déplacement}
       voitures[i].x := voitures[i].x + voitures[i].direction;
 
       if voitures[i].x < 1 then
@@ -190,10 +184,10 @@ begin
     else  
     begin
       case UpCase(key) of
-        'Z', 'W': if grenouille.y > 1 then grenouille.y := grenouille.y - 1;  { Haut }
-        'S'     : if grenouille.y < HAUTEUR_ECRAN then grenouille.y := grenouille.y + 1;  { Bas }
-        'Q', 'A': if grenouille.x > 1 then grenouille.x := grenouille.x - 1;  { Gauche }
-        'D'     : if grenouille.x < LARGEUR_ECRAN then grenouille.x := grenouille.x + 1;  { Droite }
+        'Z', 'W': if grenouille.y > 1 then grenouille.y := grenouille.y - 1;  
+        'S'     : if grenouille.y < HAUTEUR_ECRAN then grenouille.y := grenouille.y + 1;  
+        'Q', 'A': if grenouille.x > 1 then grenouille.x := grenouille.x - 1;  
+        'D'     : if grenouille.x < LARGEUR_ECRAN then grenouille.x := grenouille.x + 1;  
       end;
     end;
   end;
@@ -270,11 +264,9 @@ end;
 
 procedure AfficherScore(score: Integer);
 begin
-  { Positionner et effacer la ligne }
   GotoXY(1, 1);
-  ClrEol;  { Efface jusqu'à la fin de la ligne }
+  ClrEol;  
   
-  { Afficher le nouveau score }
   TextColor(White);
   Write('Vies: ', grenouille.vie, '  |  Score: ', score, '  |  Niveau: ', niveau);
 end;
@@ -290,7 +282,6 @@ begin
   if nbVoituresActuel > High(voitures) then
     nbVoituresActuel := High(voitures);
 
-   {change vitesse et le skin des voitures selon le niveau}
   for i := 1 to nbVoituresActuel do
   begin
     voitures[i].vitesse := voitures[i].vitesse + 1;
@@ -313,7 +304,6 @@ end;
     end;
   end;
 
-  {effet visuel et son}
   clrscr;
   TextColor(Green);
   GotoXY(30, 12);
@@ -327,26 +317,23 @@ end;
   Delay(600);
   {$ENDIF}
 
-  { Effacer le texte et redessiner l'écran }
   clrscr;
   
-  // Repositionner la grenouille
   grenouille.x := 40;
   grenouille.y := 24;
   hauteurPrecedente := grenouille.y;
-  oldGrenouilleX := 0;  { Réinitialiser position précédente }
+  oldGrenouilleX := 0;  
   oldGrenouilleY := 0;
 end;
 
-// ----------------------- Programme principal -----------------------
 procedure Frogger(var score : SmallInt);
 begin
   TextBackground(Black);
   TextColor(White);
   clrscr;
-  CursorOff;  { Masquer le curseur }
+  CursorOff;  
   
-  key := ' ';  { Initialiser la touche }
+  key := ' ';  
   niveau := 1;
   nbVoituresActuel := NB_VOITURES;
   InitialiserVoitures;
@@ -355,10 +342,9 @@ begin
   grenouille.vie := 3;
   score := 0;
   hauteurPrecedente := grenouille.y;
-  oldGrenouilleX := 0;  { Initialiser position précédente }
+  oldGrenouilleX := 0;  
   oldGrenouilleY := 0;
 
-  { Instructions }
   TextColor(Yellow);
   GotoXY(10, 12);
   WriteLn('Utilisez les fleches ou ZQSD pour bouger, ENTREE pour quitter');
@@ -367,7 +353,6 @@ begin
   WriteLn('Appuyez sur une touche pour commencer...');
   ReadKey;
 
-  { Affichage initial complet }
   clrscr;
   AfficherZoneVictoire;
 
@@ -387,9 +372,8 @@ begin
     end;
 
     Delay(80);
-  until (key = #13) or (grenouille.vie <= 0);  { #13 = Entrée pour quitter }
+  until (key = #13) or (grenouille.vie <= 0);  
 
-  { Écran de fin }
   clrscr;
   TextColor(White);
   GotoXY(30, 10);
@@ -418,7 +402,6 @@ begin
   WriteLn('Appuyez sur une touche pour continuer...');
   ReadKey;
   
-  { Restaurer le curseur et réinitialiser les couleurs }
   CursorOn;
   TextBackground(Black);
   TextColor(White);

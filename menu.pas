@@ -4,7 +4,7 @@ unit menu;
 
 interface
 
-uses Typesmenu, crt, SysUtils, puissance4, casino, frogger, morpion, flappybird, TronGame;
+uses Typesmenu, crt, SysUtils, puissance4, roulette, frogger, morpion, flappybird, TronGame;
 
 var choixj : Integer;
 	listej : TListeJeux;

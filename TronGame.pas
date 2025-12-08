@@ -187,6 +187,14 @@ begin
   joueur2.vie := 10;
   dernierGagnant := 0;
 
+  GotoXY(1, HAUTEUR_ECRAN + 2);
+  writeln('Deplacez vous avec les fleches pour j1 et avec ZQSD pour j2');
+  GotoXY(1, HAUTEUR_ECRAN + 3);
+  writeln('Appuyez sur Echap pour quitter le jeu a tout moment.');
+  GotoXY(1, HAUTEUR_ECRAN + 4);
+  writeln('Appuyez sur une touche pour commencer...');
+  readkey;
+
   repeat
     InitialiserJeu;
 

@@ -75,12 +75,12 @@ begin
   joueur1.x := 10;
   joueur1.y := HAUTEUR_ECRAN div 2;
   joueur1.dir := Droite;
-  joueur1.symbole := 'O'; // J1 ASCII
+  joueur1.symbole := 'O'; 
 
   joueur2.x := LARGEUR_ECRAN - 10;
   joueur2.y := HAUTEUR_ECRAN div 2;
   joueur2.dir := Gauche;
-  joueur2.symbole := 'X'; // J2 ASCII
+  joueur2.symbole := 'X'; 
 
   jeuActif := True;
 end;
@@ -94,14 +94,14 @@ begin
   else TextColor(Yellow);
 
   gotoxy(j.x, j.y);
-  write(j.symbole); // ASCII char to avoid multibyte/width issues
+  write(j.symbole); 
 end;
 
 procedure AfficherScore;
 begin
   TextColor(White);
   gotoxy(SCORE_POS_X, SCORE_POS_Y);
-  ClrEol; // efface la fin de la ligne de statut pour éviter résidus
+  ClrEol; 
   gotoxy(SCORE_POS_X, SCORE_POS_Y);
   write('J1: ', joueur1.vie:3, '   J2: ', joueur2.vie:3);
 end;
@@ -122,7 +122,6 @@ end;
 procedure Trace(var j: TJoueur; xprecedent, yprecedent: integer);
 var horiz: boolean;
 begin
-  // On trace la position précédente du joueur (sa "traînée")
   if (xprecedent < 2) or (xprecedent > LARGEUR_ECRAN - 1) or
      (yprecedent < 2) or (yprecedent > HAUTEUR_ECRAN - 1) then Exit;
 
@@ -146,7 +145,6 @@ begin
 
   t := readkey;
 
-  // Touche Echap pour quitter immédiatement
   if t = #27 then
   begin
     jeuActif := False;
@@ -160,10 +158,10 @@ begin
     ext := readkey;
     code := Ord(ext);
     case code of
-      75: if joueur1.dir <> Droite then joueur1.dir := Gauche;  // gauche
-      77: if joueur1.dir <> Gauche then joueur1.dir := Droite;  // droite
-      72: if joueur1.dir <> Bas then joueur1.dir := Haut;       // haut
-      80: if joueur1.dir <> Haut then joueur1.dir := Bas;       // bas
+      75: if joueur1.dir <> Droite then joueur1.dir := Gauche;   
+      77: if joueur1.dir <> Gauche then joueur1.dir := Droite;   
+      72: if joueur1.dir <> Bas then joueur1.dir := Haut;       
+      80: if joueur1.dir <> Haut then joueur1.dir := Bas;        
     end;
   end
   else
@@ -179,7 +177,6 @@ end;
 
 procedure VerifierCollision(var j: TJoueur);
 begin
-  // Vérifier bornes avant d'accéder à grille
   if (j.x < 1) or (j.x > LARGEUR_ECRAN) or (j.y < 1) or (j.y > HAUTEUR_ECRAN) then
   begin
     dec(j.vie);
@@ -248,7 +245,6 @@ begin
       delay(100);
     end;
 
-    // Si le jeu a été arrêté par Echap (on force vies à 0), sortir proprement
     if (joueur1.vie = 0) and (joueur2.vie = 0) then
     begin
       clrscr;

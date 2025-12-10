@@ -14,7 +14,7 @@ function CollisionVoiture(grenouille: TGrenouille; voitures: array of TObjet): b
 procedure Explosion(x, y: Integer);
 procedure ToucheVoiture(var grenouille: TGrenouille; var hauteurPrecedente: Integer; voitures: array of TObjet);
 function Victoire(grenouille: TGrenouille): boolean;
-procedure AfficherZoneVictoire;
+procedure AfficherZoneVictoire(var largeurEcran: Integer);
 procedure MettreAJourScore(var score: SmallInt; grenouille: TGrenouille; var hauteurPrecedente: Integer);
 procedure AfficherScore(score: Integer; grenouille: TGrenouille; niveau: Integer);
 procedure NouveauNiveau(var niveau: Integer; var nbVoituresActuel: Integer; var voitures: array of TObjet; var grenouille: TGrenouille; var hauteurPrecedente: Integer; var oldGrenouilleX, oldGrenouilleY: Integer);
@@ -239,17 +239,19 @@ begin
 end;
 
 
-procedure AfficherZoneVictoire;
-var i: Integer;
+procedure AfficherZoneVictoire(var largeurEcran: Integer);
+var
+  i: Integer;
 begin
   TextColor(Cyan);
-  for i := 1 to LARGEUR_ECRAN do
+  for i := 1 to largeurEcran do
   begin
     GotoXY(i, 2);
     Write('=');
   end;
   TextColor(White);
 end;
+
 
 
 procedure MettreAJourScore(var score: SmallInt; grenouille: TGrenouille; var hauteurPrecedente: Integer);

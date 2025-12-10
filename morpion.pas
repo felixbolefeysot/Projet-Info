@@ -1,8 +1,5 @@
 unit morpion;
 
-{$MODE OBJFPC}
-{$H+}
-
 interface
 uses Typesmenu, crt;
 
@@ -38,7 +35,7 @@ end;
 
 function verifdiagonale(g : TGrilleMorpion; symbole: char; c, l : Integer) : Boolean;
 var
-    dc, dl, count : Integer;
+    dc, dl, compte : Integer;
 begin
     verifdiagonale := False;  
     dc := c;
@@ -48,14 +45,14 @@ begin
         dc := dc - 1;
         dl := dl - 1;
     end;
-    count := 0;
+    compte := 0;
     while (dc <= 3) and (dl <= 3) do
     begin
         if g[dc,dl] = symbole then
-            count := count + 1
+            compte := compte + 1
         else
-            count := 0;
-        if count >= 3 then
+            compte := 0;
+        if compte >= 3 then
         begin
             verifdiagonale := True;
             Exit;
@@ -70,14 +67,14 @@ begin
         dc := dc + 1;
         dl := dl - 1;
     end;
-    count := 0;
+    compte := 0;
     while (dc >= 1) and (dl <= 3) do
     begin
         if g[dc,dl] = symbole then
-            count := count + 1
+            compte := compte + 1
         else
-            count := 0;
-        if count >= 3 then
+            compte := 0;
+        if compte >= 3 then
         begin
             verifdiagonale := True;
             Exit;
@@ -88,16 +85,16 @@ begin
 end;
 
 procedure verifligne(g : TGrilleMorpion; symbole: char; l : Integer; var gagne : Boolean);
-var c, count : Integer;
+var c, compte : Integer;
 begin
-    count := 0;
+    compte := 0;
     for c:=1 to 3 do
     begin
         if g[c,l] = symbole then
-            count := count + 1
+            compte := compte + 1
         else
-            count := 0;
-        if count >= 3 then
+            compte := 0;
+        if compte >= 3 then
         begin
             gagne := True;
             Exit;
@@ -106,16 +103,16 @@ begin
 end;
 
 procedure verifcolonne(g : TGrilleMorpion; symbole: char; c : Integer; var gagne : Boolean);
-var l, count : Integer;
+var l, compte : Integer;
 begin
-    count := 0;
+    compte := 0;
     for l:=1 to 3 do
     begin
         if g[c,l] = symbole then
-            count := count + 1
+            compte := compte + 1
         else
-            count := 0;
-        if count >= 3 then
+            compte := 0;
+        if compte >= 3 then
         begin
             gagne := True;
             Exit;
@@ -197,7 +194,7 @@ procedure scoremorpion(var liste: TListeProfils; profileJ1, profileJ2: Integer);
 var
   scoreIndex: Integer;
 begin
-  scoreIndex := MAX_JEUX_SOLO + 2;  { Morpion est le 2ème jeu multi : 2 + 2 = 4 }
+  scoreIndex := MAX_JEUX_SOLO + 2;  
   if dernierGagnant = 1 then
     liste.profils[profileJ1].scores[scoreIndex] := liste.profils[profileJ1].scores[scoreIndex] + 1
   else if dernierGagnant = 2 then

@@ -78,8 +78,8 @@ var
 begin
     case choixj of
         1: begin
-            jouerRoulette; 
-            scorecasino(ListeProfils, j1);
+            jouerRoulette(score); 
+            scorecasino(ListeProfils, score, j1);
             sauvegarderProfils(ListeProfils); 	
         end;
         MAX_JEUX_SOLO + 1: begin

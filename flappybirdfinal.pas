@@ -1,10 +1,10 @@
-unit flappybird;
+unit flappybirdfinal;
 
 interface 
 
 uses crt, typesmenu, sysutils;
 
-procedure jouerflappy(var score: SmallInt; var oiseau: TOiseau; var objet: array of TObjet; var modCompte: Integer);
+procedure jouerflappy(var score: SmallInt);
 procedure scoreflappy(j1, score : Integer; var liste : TListeProfils);
 
 implementation
@@ -35,6 +35,11 @@ type TOiseau = record
     oldX: Integer;
     oldY: Integer;
   end;
+
+var
+  oiseau : TOiseau;
+  objet : array[0..NB_OBJETS-1] of TObjet;
+  modCompte: Integer;
 
 procedure InitObjet(var objet: array of TObjet);
 var i: Integer;
@@ -248,34 +253,34 @@ begin
   GotoXY(oiseau.x, oiseau.y);
 end;
 
-procedure jouerflappy(var score: SmallInt; var oiseau: TOiseau; var objet: array of TObjet; var modCompte: Integer);
-var runScore, sessionBest: SmallInt;
+procedure jouerflappy(var score: SmallInt);
+var evoScore, sessionBest: SmallInt;
     ch: char;
 begin
-  sessionBest := score;
+  sessionBest := 0;
   writeln('utilisez la flèche du haut pour sauter, appuyez sur une touche pour commencer...');
   ReadKey;
   CursorOff;
   repeat
-    runScore := 0;
+    evoScore := 0;
     InitialiserJeu(oiseau, objet, modCompte);
     GotoXY(1, 1);
-    Write('Score: ', runScore);
+    Write('Score: ', evoScore);
     GotoXY(oiseau.x, oiseau.y);
     repeat
       MettreAJourJeu(oiseau, objet, modCompte);
-      MettreAJourScore(runScore, oiseau);
+      MettreAJourScore(evoScore, oiseau);
       Delay(DELAI);
     until oiseau.dead;
 
-    if runScore > sessionBest then
-      sessionBest := runScore;
+    if evoScore > sessionBest then
+      sessionBest := evoScore;
 
     GotoXY(LARGEUR_ECRAN div 2 - 10, HAUTEUR_ECRAN div 2);
     TextColor(Red);
     Write('Game Over');
     GotoXY(LARGEUR_ECRAN div 2 - 16, HAUTEUR_ECRAN div 2 + 1);
-    if runScore = sessionBest then
+    if evoScore = sessionBest then
       Write('New session best: ', sessionBest)
     else
       Write('Session best: ', sessionBest);

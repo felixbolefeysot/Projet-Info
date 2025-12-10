@@ -12,8 +12,8 @@ procedure afficherCapital(capital: integer);
 function verifgain(choix, num, mise, douzaine, ligne, colonne: integer; c, ip : char) : integer;
 function tirage : integer;
 function couleur(num : integer) : char;
-procedure jouerRoulette;
-procedure scorecasino(var liste: TListeProfils; j: Integer);
+procedure jouerRoulette(var score: Integer);
+procedure scorecasino(var liste: TListeProfils; score,j: Integer);
 
 implementation
 
@@ -90,7 +90,7 @@ end;
 function tirage : integer;
 begin
    randomize;
-   tirage := random(37); { 0 à 36 }
+   tirage := random(37); 
 end;
 
 function couleur(num : integer) : char;
@@ -155,7 +155,7 @@ begin
   writeln('----------------------------------------');
 end;
 
-  procedure jouerRoulette;
+  procedure jouerRoulette(var score: Integer);
 var
   ch, m, d, l, co, num, gain: integer;
   c, ip, rejouer: char;
@@ -214,6 +214,8 @@ begin
 
   until (rejouer <> 'o') and (rejouer <> 'O');
 
+  score:= capital;
+
   writeln;
   writeln('----------------------------------------');
   writeln(' Fin du jeu ! Capital final : ', capital, ' unites.');
@@ -222,10 +224,10 @@ begin
   readln;
 end;
 
-procedure scorecasino(var liste: TListeProfils; j: Integer);
+procedure scorecasino(var liste: TListeProfils; score,j: Integer);
 begin
-    if capital > liste.profils[j].scores[1] then
-        liste.profils[j].scores[1] := capital;
+    if score > liste.profils[j].scores[1] then
+        liste.profils[j].scores[1] := score;
 end;
 
 end.

@@ -61,35 +61,8 @@ var
     col,row: Integer;
 begin
     estGagne := False;
-    for col := 1 to 7 do
-    begin
-        for row := 1 to 6 do
-        begin
-            if g[col,row] = joueur then
-            begin
-                if (col <= 4) and (g[col+1,row] = joueur) and (g[col+2,row] = joueur) and (g[col+3,row] = joueur) then
-                begin
-                    estGagne := True;
-                    Exit;
-                end;
-                if (row <= 3) and (g[col,row+1] = joueur) and (g[col,row+2] = joueur) and (g[col,row+3] = joueur) then
-                begin
-                    estGagne := True;
-                    Exit;
-                end;
-                if (col <= 4) and (row <= 3) and (g[col+1,row+1] = joueur) and (g[col+2,row+2] = joueur) and (g[col+3,row+3] = joueur) then
-                begin
-                    estGagne := True;
-                    Exit;
-                end;
-                if (col <= 4) and (row >= 4) and (g[col+1,row-1] = joueur) and (g[col+2,row-2] = joueur) and (g[col+3,row-3] = joueur) then
-                begin
-                    estGagne := True;
-                    Exit;
-                end;
-            end;
-        end;
-    end;
+    if verifligne(g, joueur, l) or verifcolonne(g, joueur, c) or verifdiagonale(g, joueur, c, l) then
+        estGagne := True;
 end;
 
 function verifligne(g : TGrille; joueur,l : Integer) : Boolean;

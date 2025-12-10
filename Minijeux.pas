@@ -1,6 +1,6 @@
 program Minijeux;
 uses menu, typesmenu;
-var choixmenu : LongInt;
+var choixmenu : SmallInt;
     listep : TListeProfils;
 begin
     writeln('Bienvenue dans le menu des mini-jeux !');

@@ -4,15 +4,15 @@ interface
 
 uses TADGrille, Typesmenu, crt;
 
-procedure puissance4;
-procedure scorepuissance4(var liste: TListeProfils; profilJ1, profilJ2: Integer);
+procedure puissance4(var dernierGagnant: Integer);
+procedure scorepuissance4(dernierGagnant: Integer; var liste: TListeProfils; profilJ1, profilJ2: Integer);
 var
     dernierGagnant: Integer; 
 
 
 implementation
 
-procedure puissance4;
+procedure puissance4(var dernierGagnant: Integer);
 var 
     j,c,l : Integer;
 	g : TGrille;
@@ -36,11 +36,11 @@ begin
     if dernierGagnant = 0 then
         writeln('Match nul ou fin de partie')
     else
-        writeln('Le joueur ', dernierGagnant, ' a gagne !');
+        writeln( liste.profils[dernierGagnant].nom, ' a gagne !');
     readln;
 end;
 
-procedure scorepuissance4(var liste: TListeProfils; profilJ1, profilJ2: Integer);
+procedure scorepuissance4(dernierGagnant: Integer; var liste: TListeProfils; profilJ1, profilJ2: Integer);
 var
   scoreIndex: Integer;
 begin

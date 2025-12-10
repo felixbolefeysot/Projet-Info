@@ -13,7 +13,6 @@ function estGagne(g : TGrille; joueur,c,l : Integer) : Boolean;
 function verifligne(g : TGrille; joueur,l : Integer) : Boolean;
 function verifcolonne(g : TGrille; joueur,c : Integer) : Boolean;
 function verifdiagonale(g : TGrille; joueur,c,l : Integer) : Boolean;
-procedure ModifScoreP4(joueur : integer; var p : TListeProfils);
 procedure afficherGrille(g : TGrille);
 function estFinie(g : TGrille; c,l : Integer) : Boolean;
 
@@ -43,7 +42,7 @@ end;
 
 procedure PoserJeton(joueur : integer; var g : TGrille ; var c,l : integer);
 begin
-    writeln('choissisez le numéro de la colonne (1-7) dans laquelle vous voulez poser votre jeton');
+    writeln('choissisez le numero de la colonne (1-7) dans laquelle vous voulez poser votre jeton');
     repeat
         readln(c);
         if estColonneValide(c,g)=false then
@@ -180,10 +179,7 @@ begin
         dl := dl - 1;
     end;
 end;
-procedure ModifScoreP4(joueur : integer; var p : TListeProfils);
-begin
-    p.profils[joueur].scores[MAX_JEUX_SOLO + 1] := p.profils[joueur].scores[MAX_JEUX_SOLO + 1] + 1;
-end;
+
 
 procedure afficherGrille(g : TGrille);
 var i,j : integer;

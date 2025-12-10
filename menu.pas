@@ -1,5 +1,3 @@
-{$MODE OBJFPC}
-
 unit menu;
 
 interface
@@ -85,8 +83,8 @@ begin
             sauvegarderProfils(ListeProfils); 	
         end;
         MAX_JEUX_SOLO + 1: begin
-            puissance4.puissance4;
-            scorepuissance4(ListeProfils, j1, j2);
+            puissance4.puissance4(dernierGagnant);
+            scorepuissance4(dernierGagnant, ListeProfils, j1, j2);
             sauvegarderProfils(ListeProfils); 
         end;
         2: begin
@@ -253,7 +251,7 @@ var
 	profilsPath : string;
 begin
 	profilsPath := ExtractFilePath(ParamStr(0)) + 'profils.txt';
-	assignfile(f, profilsPath);
+	assign(f, profilsPath);
 	rewrite(f);
 	writeLn(f, length(ListeProfils.profils));
 	for i := 0 to length(ListeProfils.profils) - 1 do
@@ -262,7 +260,7 @@ begin
 		for j := 1 to MAX_SCORES do
 			writeLn(f, ListeProfils.profils[i].scores[j]);
 	end;
-	closefile(f);
+	close(f);
 end;
 
 
@@ -279,7 +277,7 @@ begin
 		setlength(ListeProfils.profils, 0);
 		exit;
 	end;
-	assignfile(f, profilsPath);
+	assign(f, profilsPath);
 	reset(f);
 	readLn(f, n);
 	setlength(ListeProfils.profils, n);
@@ -289,7 +287,7 @@ begin
 		for j := 1 to MAX_SCORES do
 			readLn(f, ListeProfils.profils[i].scores[j]);
 	end;
-	closefile(f);
+	close(f);
 end;
 
 procedure initNomJeux(var listej : TListeJeux);

@@ -1,22 +1,16 @@
-unit TronGame;
+unit trongamefinal;
 
 interface
 uses crt, sysutils, Typesmenu;
 
 var
   dernierGagnant: Integer;
-
   
-InitialiserGrille(var grille: array of array of Boolean);
-InitialiserJeu(var joueur1, joueur2: TJoueur; var jeuActif: Boolean; var grille: array of array of Boolean);
-AfficherJoueur(var j: TJoueur);
-AfficherScore(var joueur1, joueur2: TJoueur);
-Deplacement(var j: TJoueur; var xprecedent, yprecedent: integer);
-Trace(var j: TJoueur; xprecedent, yprecedent: integer; var grille: array of array of Boolean);
-GererTouches(var joueur1, joueur2: TJoueur; var jeuActif: Boolean);
-VerifierCollision(var j: TJoueur; var jeuActif: Boolean; var grille: array of array of Boolean);
-scoretron(winner, j1, j2: Integer; var liste: TListeProfils);
-JouerTron(var joueur1, joueur2: TJoueur; var dernierGagnant: Integer; var grille: array of array of Boolean);
+  
+
+
+procedure scoretron(dernierGagnant, j1, j2: Integer; var liste: TListeProfils);
+procedure JouerTron(var dernierGagnant: Integer);
 
 
 implementation
@@ -34,12 +28,19 @@ type
     x, y, vie: integer;
     dir: TDirection;
     symbole: char;
-  end;
+   end;
+  TGrille = array [1..LARGEUR_ECRAN,1..HAUTEUR_ECRAN] of Boolean;
 
 var
   jeuActif: boolean;
+  joueur1,joueur2: TJoueur;
+  grille : TGrille;
+  
 
-procedure InitialiserGrille(var grille: array of array of Boolean);
+  
+
+
+procedure InitialiserGrille(var grille: TGrille);
 var
   i, j: integer;
 begin
@@ -60,7 +61,7 @@ begin
   end;
 end;
 
-procedure InitialiserJeu(var joueur1, joueur2: TJoueur; var jeuActif: Boolean; var grille: array of array of Boolean);
+procedure InitialiserJeu(var joueur1, joueur2: TJoueur; var jeuActif: Boolean; var grille: TGrille);
 var i: integer;
 begin
   clrscr;
@@ -69,14 +70,18 @@ begin
 
   for i := 1 to LARGEUR_ECRAN do
   begin
-    gotoxy(i,1); write('-');
-    gotoxy(i,HAUTEUR_ECRAN); write('-');
+    gotoxy(i,1); 
+    write('-');
+    gotoxy(i,HAUTEUR_ECRAN); 
+    write('-');
   end;
 
   for i := 1 to HAUTEUR_ECRAN do
   begin
-    gotoxy(1,i); write('|');
-    gotoxy(LARGEUR_ECRAN,i); write('|');
+    gotoxy(1,i); 
+    write('|');
+    gotoxy(LARGEUR_ECRAN,i); 
+    write('|');
   end;
 
   joueur1.x := 10;
@@ -122,7 +127,7 @@ begin
   end;
 end;
 
-procedure Trace(var j: TJoueur; xprecedent, yprecedent: integer; var grille: array of array of Boolean);
+procedure Trace(var j: TJoueur; xprecedent, yprecedent: integer; var grille: TGrille);
 var horiz: boolean;
 begin
   if (xprecedent < 2) or (xprecedent > LARGEUR_ECRAN - 1) or
@@ -175,7 +180,7 @@ begin
   end;
 end;
 
-procedure VerifierCollision(var j: TJoueur; var jeuActif: Boolean; var grille: array of array of Boolean);
+procedure VerifierCollision(var j: TJoueur; var jeuActif: Boolean; var grille: TGrille);
 begin
   if (j.x < 1) or (j.x > LARGEUR_ECRAN) or (j.y < 1) or (j.y > HAUTEUR_ECRAN) then
   begin
@@ -191,26 +196,29 @@ begin
   end;
 end;
 
-procedure scoretron(winner, j1, j2: Integer; var liste : TListeProfils);
+procedure scoretron(dernierGagnant, j1, j2: Integer; var liste : TListeProfils);
 begin
-  if winner = 2 then
+  if dernierGagnant = 2 then
     liste.profils[j2].scores[MAX_JEUX_SOLO + 3] := liste.profils[j2].scores[MAX_JEUX_SOLO + 3] + 1
-  else if winner = 1 then
+  else if dernierGagnant = 1 then
     liste.profils[j1].scores[MAX_JEUX_SOLO + 3] := liste.profils[j1].scores[MAX_JEUX_SOLO + 3] + 1;
 end;
 
-procedure JouerTron(var joueur1, joueur2: TJoueur; var dernierGagnant: Integer; var grille: array of array of Boolean);
+procedure JouerTron( var dernierGagnant: Integer);
 var
   xprecedent1, yprecedent1, xprecedent2, yprecedent2: integer;
+  ch : char;
 begin
   joueur1.vie := INITIAL_LIVES;
   joueur2.vie := INITIAL_LIVES;
   dernierGagnant := 0;
+  ch:= #0;
+  
 
   GotoXY(1, HAUTEUR_ECRAN + 2);
   writeln('Deplacez vous avec les fleches pour j1 et avec ZQSD pour j2');
   GotoXY(1, HAUTEUR_ECRAN + 3);
-  writeln('Appuyez sur Echap pour quitter le jeu a tout moment.');
+  writeln('Appuyez sur Entrer pour quitter le jeu a tout moment.');
   GotoXY(1, HAUTEUR_ECRAN + 4);
   writeln('Appuyez sur une touche pour commencer...');
   readkey;
@@ -244,6 +252,7 @@ begin
 
       delay(100);
     end;
+    
 
     if (joueur1.vie = 0) and (joueur2.vie = 0) then
     begin
@@ -254,10 +263,11 @@ begin
 
     TextColor(Red);
     gotoxy(1, HAUTEUR_ECRAN + 2);
-    writeln('Collision ! Nouvelle manche dans 2 secondes...');
-    delay(2000);
+    writeln(' Collision ! Appuyez sur une touche pour continuer ou Entrer  pour quitter');
+    ch:= readkey;
+    delay(1500);
 
-  until (joueur1.vie = 0) or (joueur2.vie = 0);
+  until (joueur1.vie = 0) or (joueur2.vie = 0) or (ch=#13) ;
 
   clrscr;
   TextColor(White);

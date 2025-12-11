@@ -3,12 +3,6 @@ unit trongamefinal;
 interface
 uses crt, sysutils, Typesmenu;
 
-var
-  dernierGagnant: Integer;
-  
-  
-
-
 procedure scoretron(dernierGagnant, j1, j2: Integer; var liste: TListeProfils);
 procedure JouerTron(var dernierGagnant: Integer);
 

@@ -94,17 +94,17 @@ begin
         end;
 		MAX_JEUX_SOLO + 2: begin
 			morpion.morpion(dernierGagnant);
-			morpion.scoremorpion(dernierGagnant, ListeProfils, j1, j2);
+			scoremorpion(dernierGagnant, ListeProfils, j1, j2);
 			sauvegarderProfils(ListeProfils); 
 		end;
 		3: begin
 			flappybird.jouerflappy(score);
-			flappybird.scoreflappy(j1, score, ListeProfils);
+			scoreflappy(j1, score, ListeProfils);
 		    sauvegarderProfils(ListeProfils);
 		end;
 		MAX_JEUX_SOLO + 3: begin
-			TronGame.JouerTron;
-			TronGame.scoretron(TronGame.dernierGagnant, j1, j2, ListeProfils);
+			JouerTron;
+			scoretron(TronGame.dernierGagnant, j1, j2, ListeProfils);
 			sauvegarderProfils(ListeProfils);
 		end;
     end;

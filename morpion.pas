@@ -8,10 +8,7 @@ procedure scoremorpion(dernierGagnant: Integer; var liste: TListeProfils; profil
 
 implementation
 
-Type TGrilleMorpion = array[1..3, 1..3] of char;
-
-var
-    dernierGagnant: Integer;  
+Type TGrilleMorpion = array[1..3, 1..3] of char;  
 
 
 procedure afficherGrilleMorpion(g : TGrilleMorpion);

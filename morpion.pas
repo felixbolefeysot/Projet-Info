@@ -4,7 +4,7 @@ interface
 uses Typesmenu, crt;
 
 procedure morpion(var ListeProfils: TListeProfils; j1, j2: Integer);
-procedure scoremorpion(var liste: TListeProfils; profileJ1, profileJ2: Integer);
+procedure scoremorpion(var liste: TListeProfils; profilJ1, profilJ2: Integer);
 
 implementation
 
@@ -147,22 +147,24 @@ begin
     dernierGagnant := 0;
     
     repeat
-        ClrScr();
+        ClrScr();   
         afficherGrilleMorpion(g);
-        writeln('Joueur ', j, ', entrez la colonne (1-3) : ');
-        readln(c);
-        writeln('Joueur ', j, ', entrez la ligne (1-3) : ');
-        readln(l);
-        if (c < 1) or (c > 3) or (l < 1) or (l > 3) then
-        begin
-            writeln('Coordonnees invalides. Reessayez.');
-            continue;
-        end;
-        if g[c,l] <> ' ' then
-        begin
-            writeln('Case deja occupee. Reessayez.');
-            continue;
-        end;
+        repeat
+            writeln('Joueur ', j, ', entrez la colonne (1-3) : ');
+            readln(c);
+            writeln('Joueur ', j, ', entrez la ligne (1-3) : ');
+            readln(l);
+            if (c < 1) or (c > 3) or (l < 1) or (l > 3) then
+            begin
+                writeln('Coordonnees invalides. Reessayez.');
+                continue;
+            end;
+            if g[c,l] <> ' ' then
+            begin
+                writeln('Case deja occupee. Reessayez.');
+                continue;
+            end;
+        until (c >= 1) and (c <= 3) and (l >= 1) and (l <= 3) and (g[c,l] = ' ');
         if j = 1 then
             symbole := 'X'
         else
@@ -190,15 +192,15 @@ begin
     readln;
 end;
 
-procedure scoremorpion(var liste: TListeProfils; profileJ1, profileJ2: Integer);
+procedure scoremorpion(var liste: TListeProfils; profilJ1, profilJ2: Integer);
 var
   scoreIndex: Integer;
 begin
   scoreIndex := MAX_JEUX_SOLO + 2;  
   if dernierGagnant = 1 then
-    liste.profils[profileJ1].scores[scoreIndex] := liste.profils[profileJ1].scores[scoreIndex] + 1
+    liste.profils[profilJ1].scores[scoreIndex] := liste.profils[profilJ1].scores[scoreIndex] + 1
   else if dernierGagnant = 2 then
-    liste.profils[profileJ2].scores[scoreIndex] := liste.profils[profileJ2].scores[scoreIndex] + 1;
+    liste.profils[profilJ2].scores[scoreIndex] := liste.profils[profilJ2].scores[scoreIndex] + 1;
 end;
 
 end.

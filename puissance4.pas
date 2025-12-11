@@ -6,8 +6,6 @@ uses TADGrille, Typesmenu, crt;
 
 procedure puissance4(var dernierGagnant: Integer);
 procedure scorepuissance4(dernierGagnant: Integer; var liste: TListeProfils; profilJ1, profilJ2: Integer);
-var
-    dernierGagnant: Integer; 
 
 
 implementation

@@ -57,8 +57,6 @@ begin
 end;
 
 function estGagne(g : TGrille; joueur,c,l : Integer) : Boolean;
-var
-    col,row: Integer;
 begin
     estGagne := False;
     if verifligne(g, joueur, l) or verifcolonne(g, joueur, c) or verifdiagonale(g, joueur, c, l) then

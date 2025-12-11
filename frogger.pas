@@ -1,7 +1,5 @@
 unit Frogger;
 
-{$MODE OBJFPC}
-{$H+}
 
 interface 
 
@@ -30,6 +28,8 @@ type
     taille: Integer;
   end;
 
+type TVoitures = array[1..NB_VOITURES] of TObjet; 
+
   TGrenouille = record
     x, y: integer;
     vie: integer;
@@ -38,7 +38,7 @@ type
 var
   key: char;
   grenouille: TGrenouille;
-  voitures: array[1..NB_VOITURES] of TObjet; 
+  voitures: TVoitures; 
   hauteurPrecedente: integer;
   niveau: integer;
   nbVoituresActuel: integer;
@@ -47,7 +47,7 @@ var
   
 
 
-procedure InitialiserVoitures;
+procedure InitialiserVoitures(var voitures : TVoitures);
 var 
   i: Integer;
 begin 
@@ -82,7 +82,7 @@ begin
   end;
 end;
 
-procedure AfficherVoitures;
+procedure AfficherVoitures(nbVoituresActuel, niveau : Integer; var voitures : TVoitures);
 var
   i, j: Integer;
 begin
@@ -107,7 +107,7 @@ end;
 
 
 
-procedure AfficherGrenouille;
+procedure AfficherGrenouille(var grenouille : TGrenouille; var oldGrenouilleX, oldGrenouilleY : Integer);
 begin
   if (oldGrenouilleX > 0) and (oldGrenouilleY > 0) then
   begin
@@ -132,7 +132,7 @@ end;
 
 
 
-procedure DeplacerVoitures;
+procedure DeplacerVoitures( var voitures : TVoitures);
 var
   i, j: Integer;
 begin
@@ -156,7 +156,7 @@ begin
   end;
 end;
 
-procedure DeplacementGrenouille;
+procedure DeplacementGrenouille( key : char ; var grenouille : TGrenouille);
 begin
   if KeyPressed then
   begin
@@ -194,7 +194,7 @@ begin
 end;
 
 
-function CollisionVoiture: boolean;
+function CollisionVoiture(grenouille : TGrenouille; voitures : TVoitures):boolean;
 var i: Integer;
 begin
   CollisionVoiture := False;
@@ -215,17 +215,14 @@ begin
   TextColor(White);
 end;
 
-procedure ToucheVoiture;
+procedure ToucheVoiture( var grenouille : TGrenouille; var hauteurPrecedente : Integer; voitures : TVoitures);
 begin
-  if CollisionVoiture then
+  if CollisionVoiture(grenouille,voitures) then
   begin
     hauteurPrecedente := grenouille.y;
     Explosion(grenouille.x, grenouille.y);
-    {$IFDEF WINDOWS}
     Sound(500); Delay(100); NoSound;
-    {$ELSE}
     Delay(100);
-    {$ENDIF}
     grenouille.x := 40;
     grenouille.y := 24;
     grenouille.vie := grenouille.vie - 1;
@@ -233,7 +230,7 @@ begin
 end;
 
 
-function Victoire: boolean;
+function Victoire(grenouille : TGrenouille): boolean;
 begin
   Victoire := grenouille.y = 2;
 end;
@@ -252,7 +249,7 @@ begin
 end;
 
 
-procedure MettreAJourScore(var score: SmallInt);
+procedure MettreAJourScore(grenouille : TGrenouille; var hauteurPrecedente : Integer; var score: SmallInt);
 begin
   if grenouille.y < hauteurPrecedente then
   begin
@@ -262,7 +259,7 @@ begin
 end;
 
 
-procedure AfficherScore(score: Integer);
+procedure AfficherScore( grenouille : TGrenouille; score, niveau : Integer);
 begin
   GotoXY(1, 1);
   ClrEol;  
@@ -272,7 +269,7 @@ begin
 end;
 
 
-procedure NouveauNiveau;
+procedure NouveauNiveau( var niveau : Integer; var nbVoituresActuel : Integer; var voitures : TVoitures; var grenouille : TGrenouille; var hauteurPrecedente : Integer; var oldGrenouilleX, oldGrenouilleY : Integer);
 var
   i: integer;
 begin
@@ -309,13 +306,8 @@ end;
   GotoXY(30, 12);
   Write('=== Niveau ', niveau, ' ===');
   TextColor(White);
-  {$IFDEF WINDOWS}
   Sound(500 + 100 * niveau);
-  Delay(600);
-  NoSound;
-  {$ELSE}
-  Delay(600);
-  {$ENDIF}
+  Delay(200);
 
   clrscr;
   
@@ -336,7 +328,7 @@ begin
   key := ' ';  
   niveau := 1;
   nbVoituresActuel := NB_VOITURES;
-  InitialiserVoitures;
+  InitialiserVoitures(voitures);
   grenouille.x := 40;
   grenouille.y := 24;
   grenouille.vie := 3;
@@ -357,17 +349,17 @@ begin
   AfficherZoneVictoire;
 
   repeat
-    DeplacerVoitures;
-    AfficherVoitures;
-    DeplacementGrenouille;
-    AfficherGrenouille;
-    ToucheVoiture;
-    MettreAJourScore(score);
-    AfficherScore(score); 
+    DeplacerVoitures(voitures);
+    AfficherVoitures(nbVoituresActuel,niveau,voitures);
+    DeplacementGrenouille(key,grenouille);
+    AfficherGrenouille(grenouille,oldGrenouilleX,oldGrenouilleY);
+    ToucheVoiture(grenouille,hauteurPrecedente,voitures);
+    MettreAJourScore(grenouille,score,hauteurPrecedente);
+    AfficherScore(grenouille,score,niveau); 
 
-    if Victoire then
+    if Victoire(grenouille) then
     begin
-      NouveauNiveau;
+      NouveauNiveau(niveau,nbVoituresActuel,voitures,grenouille,hauteurPrecedente,oldGrenouilleX,oldGrenouilleY);
       AfficherZoneVictoire;  
     end;
 
@@ -382,7 +374,7 @@ begin
     TextColor(Red);
     WriteLn('Game Over!');
   end
-  else if Victoire then
+  else if Victoire(grenouille) then
   begin
     TextColor(Green);
     WriteLn('Bravo ! Vous avez gagne !');

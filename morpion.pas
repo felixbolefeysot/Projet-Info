@@ -3,8 +3,8 @@ unit morpion;
 interface
 uses Typesmenu, crt;
 
-procedure morpion(var ListeProfils: TListeProfils; j1, j2: Integer);
-procedure scoremorpion(var liste: TListeProfils; profilJ1, profilJ2: Integer);
+procedure morpion(var dernierGagnant: Integer);
+procedure scoremorpion(dernierGagnant: Integer; var liste: TListeProfils; profilJ1, profilJ2: Integer);
 
 implementation
 
@@ -131,7 +131,7 @@ begin
         gagne := True;
 end;    
 
-procedure morpion(var ListeProfils: TListeProfils; j1, j2: Integer);
+procedure morpion(var dernierGagnant: Integer);
 var 
     g : TGrilleMorpion;
     j, c, l, tour : Integer;
@@ -192,7 +192,7 @@ begin
     readln;
 end;
 
-procedure scoremorpion(var liste: TListeProfils; profilJ1, profilJ2: Integer);
+procedure scoremorpion(dernierGagnant: Integer; var liste: TListeProfils; profilJ1, profilJ2: Integer);
 var
   scoreIndex: Integer;
 begin

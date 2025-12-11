@@ -93,8 +93,8 @@ begin
             sauvegarderProfils(ListeProfils); 
         end;
 		MAX_JEUX_SOLO + 2: begin
-			morpion.morpion(ListeProfils, j1, j2);
-			morpion.scoremorpion(ListeProfils, j1, j2);
+			morpion.morpion(dernierGagnant);
+			morpion.scoremorpion(dernierGagnant, ListeProfils, j1, j2);
 			sauvegarderProfils(ListeProfils); 
 		end;
 		3: begin
